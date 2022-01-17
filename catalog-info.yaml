@@ -1,0 +1,16 @@
+# For more information about the available options please visit: http://go/backstage (VPN required)
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  annotations:
+    github.com/project-slug: unity/Cinecast-Wildwest-Sample
+  name: Cinecast-Wildwest-Sample
+  description: "This sample showcases all the basic functionalities of Cinecast, it acts as a suggestion of how Cinecast could be implemented into a game. "
+  labels:
+    costcenter: "2048"
+  tags:
+    - enterprise
+spec:
+  type: other
+  lifecycle: production
+  owner: unity/cinecast
