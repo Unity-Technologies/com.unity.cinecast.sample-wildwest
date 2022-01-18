@@ -345,6 +345,7 @@ public class CinecastManager : MonoBehaviour
         SessionRecordingStartRequest recordingRequest = new SessionRecordingStartRequest()
         {
             Name = SessionName,
+            Password = password,
             ApplicationVersion = applicationVersion,
             SettingReferenceId = appSettings?.RefId,
             InterestCalc = SessionRecordingStartRequest_InterestCalc.Record,
@@ -617,13 +618,13 @@ public class CinecastManager : MonoBehaviour
 #region POI's
     public async void PreparePoiRecordingService()
     {
-        poiRecordingService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IPoiRecordingService>(DiscoveryOptions.Required).ConfigureAwait(true);
+        poiRecordingService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IPoiRecordingService>(DiscoveryOptions.Required).ConfigureAwait(false);
         CreateInitialPOIs();
     }
 
     public async void PreparePoiPlaybackService()
     {
-        poiPlaybackService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IPoiPlaybackService>(DiscoveryOptions.Required).ConfigureAwait(true);
+        poiPlaybackService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IPoiPlaybackService>(DiscoveryOptions.Required).ConfigureAwait(false);
 
         poiPlaybackService.OnPoiVersionUpdated += OnPOIVersionUpdate;
         GetPOIStates();
