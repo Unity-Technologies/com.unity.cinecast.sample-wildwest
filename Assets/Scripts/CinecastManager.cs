@@ -28,6 +28,9 @@ public class CinecastManager : MonoBehaviour
 
     [Header("Config:")]
     [SerializeField] private CinecastConfig cinecastConfig;
+    
+    [Header("SessionSearchTags:")] 
+    public List<SampleTag> AllowedSessionSearchTags = new List<SampleTag>();
 
     private bool authorizationComplete;
 
@@ -54,6 +57,9 @@ public class CinecastManager : MonoBehaviour
     private long lastFrame;
 
     private List<Cinecast.Api.Server.Extraction.SpectatorEvent> spectatorEventsTimeline;
+    
+    public List<SessionTag> SessionSearchTags = new List<SessionTag>();
+    public List<SessionTag> NewSessionStartTags = new List<SessionTag>();
 
     #region Properties
     public static CinecastManager Instance { get; private set; }
@@ -134,7 +140,7 @@ public class CinecastManager : MonoBehaviour
         if(showCinecastLogs){
             Debug.Log("Cinecast Authorization Successful!");
         }
-        GetSessions();
+        GetRecentSessions();
     }
 
     private void OnAuthorizationFailed(object sender, INetworkResult result)
@@ -151,7 +157,7 @@ public class CinecastManager : MonoBehaviour
     }
 #endregion
 #region Sessionmanagement
-    public async void GetSessions()
+    public async void GetRecentSessions()
     {
         sessionManagementService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<ISessionManagementService>(DiscoveryOptions.Required).ConfigureAwait(false);
 
@@ -183,6 +189,110 @@ public class CinecastManager : MonoBehaviour
                 }
             });
         }
+    }
+    
+    public async void GetSessionsByName(string searchInput)
+    {
+        if (sessionManagementService == null)
+        {
+            sessionManagementService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<ISessionManagementService>(DiscoveryOptions.Required).ConfigureAwait(false);
+        }
+
+        (bool success, SessionSearchResponse sessionSearchResponse) =
+            await sessionManagementService.FindByName(searchInput).ConfigureAwait(false);
+
+        mainThreadDispatcher.Dispatch(() =>
+        {
+            if (success)
+            {
+                UserInterface.Instance.RefreshSessionsPanel();
+                if (sessionSearchResponse.Data == null) return;
+                foreach (var item in sessionSearchResponse.Data)
+                {
+                    TimeSpan sessionDuration = item.EndAt.Subtract(item.CreatedAt);
+                    string sessionLength = (item.Status == SessionInfoSearchResponse_Status.Recording)
+                        ? "LIVE"
+                        : $"{sessionDuration.Minutes:00}:{sessionDuration.Seconds:00}";
+                    UserInterface.Instance.AddSessionButton(item.Name, item.Status.ToString(), item.Id, sessionLength,
+                        item.IsLocked);
+                }
+            }
+            else
+            {
+                Debug.Log($"No sessions with the name {searchInput} found!");
+            }
+        });
+    }
+
+    public void UpdateSessionSearchTags(List<SampleTag> currentSearchedTags)
+    {
+        SessionSearchTags.Clear();
+
+        for (int i = 0; i < currentSearchedTags.Count; i++)
+        {
+            SessionTag tag = new SessionTag();
+            tag.Category = currentSearchedTags[i].Category;
+            tag.Tags = new List<string>();
+            tag.Tags = currentSearchedTags[i].Tags;
+            SessionSearchTags.Add(tag);
+        }
+        
+        UpdateSessionSearch();
+    }
+    
+    public void UpdateSessionStartTags(List<SampleTag> selectedSessionStartTags)
+    {
+        NewSessionStartTags.Clear();
+        
+        for (int i = 0; i < selectedSessionStartTags.Count; i++)
+        {
+            SessionTag tag = new SessionTag();
+            tag.Category = selectedSessionStartTags[i].Category;
+            tag.Tags = new List<string>();
+            tag.Tags = selectedSessionStartTags[i].Tags;
+            NewSessionStartTags.Add(tag);
+        }
+    }
+    public async void UpdateSessionSearch()
+    {
+        if (sessionManagementService == null)
+        {
+            sessionManagementService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<ISessionManagementService>(DiscoveryOptions.Required).ConfigureAwait(false);
+        }
+
+        if (SessionSearchTags.Count == 0)
+        {
+            GetRecentSessions();
+        }
+        else
+        {
+            (bool success, SessionSearchResponse sessionSearchResponse) =
+                await sessionManagementService.FindByTags(SessionSearchTags).ConfigureAwait(false);
+        
+            mainThreadDispatcher.Dispatch(() =>
+            {
+                if (success)
+                {
+                    UserInterface.Instance.RefreshSessionsPanel();
+                    if (sessionSearchResponse.Data == null) return;
+                    foreach (var item in sessionSearchResponse.Data)
+                    {
+                        TimeSpan sessionDuration = item.EndAt.Subtract(item.CreatedAt);
+                        string sessionLength = (item.Status == SessionInfoSearchResponse_Status.Recording)
+                            ? "LIVE"
+                            : $"{sessionDuration.Minutes:00}:{sessionDuration.Seconds:00}";
+                        UserInterface.Instance.AddSessionButton(item.Name, item.Status.ToString(), item.Id, sessionLength,
+                            item.IsLocked);
+                    }
+                }
+                else
+                {
+                    Debug.Log($"No sessions with these tags found!");
+                }
+            });
+        }
+        
+        
     }
     
     
@@ -225,43 +335,44 @@ public class CinecastManager : MonoBehaviour
 
     public async void StartRecording()
     {
-        const string applicationVersion = @"1.0.0";
+        string applicationVersion = @"1.0.0";
 
         SessionName = string.IsNullOrEmpty(SessionName) ? "mySession" + Time.time : SessionName;
-        string password = (string.IsNullOrEmpty(SessionPassword) ? null : SessionPassword);
+        string password = string.IsNullOrEmpty(SessionPassword) ? null : SessionPassword;
+        
+        IList<SessionSpectatorEventSetting> sessionSpectatorEvents = AllowSpectorEvents ?  GetSpectatorEventSettings() : null;
 
-
-        IList<SessionSpectatorEventSetting> sessionSpectatorEvents = (AllowSpectorEvents) ?  GetSpectatorEventSettings() : null;
-
-        SessionRecordingStartRequest_InterestCalc interestCalc = SessionRecordingStartRequest_InterestCalc.Record;
-        (bool isRecording, RecordingSessionInfo recordingSessionInfo) = await recordingService.StartRecording
-        (SessionName,
-        applicationVersion,
-        null,
-        password,
-        appSettingRef: appSettings,
-        interestCalc,
-        sessionSpectatorEvents).ConfigureAwait(false);
-
-        if (isRecording)
+        SessionRecordingStartRequest recordingRequest = new SessionRecordingStartRequest()
         {
-            cinecastState = CinecastState.Recording;
-            if(showCinecastLogs)
-            {
-                Debug.Log("Recording Started Successfully.");
-            }
-        }
-        else
-        {
-            if(showCinecastLogs)
-            {
-                Debug.Log("Recording failed.");
-            }
-        }
+            Name = SessionName,
+            ApplicationVersion = applicationVersion,
+            SettingReferenceId = appSettings?.RefId,
+            InterestCalc = SessionRecordingStartRequest_InterestCalc.Record,
+            SpectatorEvents = sessionSpectatorEvents,
+            SessionTags = NewSessionStartTags
+        };
+
+        (bool isRecording, RecordingSessionInfo recordingSessionInfo) =
+            await recordingService.StartRecording(recordingRequest).ConfigureAwait(false);
+        
 
         mainThreadDispatcher.Dispatch(() =>
         {
-            DemoManager.Instance.StartAgents();
+            if (isRecording)
+            {
+                DemoManager.Instance.StartAgents();
+                if(showCinecastLogs)
+                {
+                    Debug.Log("Recording Started Successfully.");
+                }
+            }
+            else
+            {
+                if(showCinecastLogs)
+                {
+                    Debug.Log("Recording failed.");
+                }
+            }
         });
 
     }
@@ -598,7 +709,6 @@ public class CinecastManager : MonoBehaviour
 
     public void StartHuntingPOI(string agentId)
     {
-        //TODO: Get your own config working
         PoiEventRef poiEventRef = new PoiEventRef(@"hunt");
         poiRecordingService.StartEvent(agentId,poiEventRef);
     }

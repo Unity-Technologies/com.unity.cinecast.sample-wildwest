@@ -16,7 +16,12 @@ public class UserInterface : MonoBehaviour
     public Button showPreviousSessionsButton;
     public GameObject sessionButtonPrefab;
     public RectTransform sessionScrollRect;
-
+    public RectTransform sessionSearchTagPanel;
+    public RectTransform sessionStartTagPanel;
+    public GameObject tagPrefab;
+    public TMP_InputField sessionSearchBarInput;
+    public Button sessionSearchButton;
+    
     [Header("New Session:")]
     public Button startNewSessionButton;
     public GameObject newSessionSettingsPanel;
@@ -75,6 +80,8 @@ public class UserInterface : MonoBehaviour
 
     private static UserInterface m_Instance;
     private SessionManagementState sessionManagementState;
+    public List<SampleTag> selectedSessionSearchTags;
+    public List<SampleTag> selectedTagsForSessionStart;
 
 #region Properties
     public static UserInterface Instance { get{ return m_Instance;}}
@@ -94,11 +101,17 @@ public class UserInterface : MonoBehaviour
         } else {
             Destroy(gameObject);
         }
+    }
 
+    private void Start()
+    {
         authorizationPanel.SetActive(false);
         sessionManagementPanel.SetActive(false);
         passwordPanel.SetActive(false);
         recordingPanel.SetActive(false);
+        
+        selectedSessionSearchTags = new List<SampleTag>();
+        selectedTagsForSessionStart = new List<SampleTag>();
 
 
         if(!CinecastManager.Instance.HasPersonalKey() || !CinecastManager.Instance.IgnoreAuthorization){
@@ -106,7 +119,7 @@ public class UserInterface : MonoBehaviour
         } else {
             CinecastManager.Instance.StartupCinecast();
             SetupSessionManagementPanel();
-            CinecastManager.Instance.GetSessions();
+            CinecastManager.Instance.GetRecentSessions();
         }
 
         DemoManager.Instance.onDemoStateChanged += OnDemoStateChanged;
@@ -124,7 +137,7 @@ public class UserInterface : MonoBehaviour
                 CinecastManager.Instance.StartupCinecast();
                 DemoManager.Instance.SetupMainMenu();
                 SetupSessionManagementPanel();
-                CinecastManager.Instance.GetSessions();
+                CinecastManager.Instance.GetRecentSessions();
             break;
 
             case DemoState.Recording:
@@ -190,9 +203,26 @@ public class UserInterface : MonoBehaviour
     public void SetupSessionManagementPanel()
     {
         sessionManagementPanel.SetActive(true);
+        sessionSearchBarInput.text = "";
+        selectedSessionSearchTags.Clear();
+
+        SetupSessionTagSearch();
 
         if(sessionManagementState == SessionManagementState.PreviousSessions)
         {
+            sessionSearchButton.onClick.RemoveAllListeners();
+            sessionSearchButton.onClick.AddListener(() =>
+            {
+                if (!string.IsNullOrEmpty(sessionSearchBarInput.text))
+                {
+                    CinecastManager.Instance.GetSessionsByName(sessionSearchBarInput.text);
+                }
+                else
+                {
+                    CinecastManager.Instance.GetRecentSessions();
+                }
+            });
+            
             showPreviousSessionsButton.onClick.RemoveAllListeners();
             showPreviousSessionsButton.enabled = false;
 
@@ -230,6 +260,58 @@ public class UserInterface : MonoBehaviour
 
             startNewSessionButton.onClick.RemoveAllListeners();
             startNewSessionButton.enabled = false;
+            
+            foreach(RectTransform child in sessionStartTagPanel.GetComponentInChildren<RectTransform>())
+            {
+                Destroy(child.gameObject);
+            }
+        
+            //Setting up available tags for new session
+            for (int i = 0; i < CinecastManager.Instance.AllowedSessionSearchTags.Count; i++)
+            {
+                string category = CinecastManager.Instance.AllowedSessionSearchTags[i].Category;
+
+                foreach (var tag in CinecastManager.Instance.AllowedSessionSearchTags[i].Tags)
+                {
+                    GameObject tagObject = Instantiate(tagPrefab, sessionStartTagPanel);
+                    tagObject.GetComponentInChildren<TextMeshProUGUI>().text = $"{category}:{tag}";
+
+                    Toggle tagToggle = tagObject.GetComponent<Toggle>();
+                    tagToggle.onValueChanged.AddListener(delegate
+                    {
+                        if (tagToggle.isOn)
+                        {
+                            SampleTag selectedTag = selectedTagsForSessionStart.Find(x => x.Category == category);
+                            selectedTag.Tags.Remove(tag);
+                            if (selectedTag.Tags.Count == 0)
+                            {
+                                selectedTagsForSessionStart.Remove(selectedTag);
+                            }
+
+                            tagToggle.GetComponentInChildren<Image>().color = Color.white;
+                            CinecastManager.Instance.UpdateSessionStartTags(selectedTagsForSessionStart);
+
+                        }
+                        else
+                        {
+                            SampleTag selectedTag = selectedTagsForSessionStart.Find(x => x.Category == category);
+                            if (selectedTag == null)
+                            {
+                                selectedTag = new SampleTag
+                                {
+                                    Category = category,
+                                    Tags = new List<string>()
+                                };
+                                selectedTagsForSessionStart.Add(selectedTag);
+                            }
+
+                            selectedTag.Tags.Add(tag);
+                            tagToggle.GetComponentInChildren<Image>().color = Color.grey;
+                            CinecastManager.Instance.UpdateSessionStartTags(selectedTagsForSessionStart);
+                        }
+                    });
+                }
+            }
 
             startButton.onClick.RemoveAllListeners();
             startButton.onClick.AddListener(() =>
@@ -240,6 +322,58 @@ public class UserInterface : MonoBehaviour
                 CinecastManager.Instance.PrepareRecordingService();
                 sessionManagementPanel.SetActive(false);
             });
+        }
+    }
+    
+    private void SetupSessionTagSearch()
+    {
+        foreach(RectTransform child in sessionSearchTagPanel.GetComponentInChildren<RectTransform>())
+        {
+            Destroy(child.gameObject);
+        }
+        
+        for (int i = 0; i < CinecastManager.Instance.AllowedSessionSearchTags.Count; i++)
+        {
+            string category = CinecastManager.Instance.AllowedSessionSearchTags[i].Category;
+
+            foreach (var tag in CinecastManager.Instance.AllowedSessionSearchTags[i].Tags)
+            {
+                GameObject tagObject = Instantiate(tagPrefab, sessionSearchTagPanel);
+                tagObject.GetComponentInChildren<TextMeshProUGUI>().text = $"{category}:{tag}";
+
+                Toggle tagToggle = tagObject.GetComponent<Toggle>();
+                tagToggle.onValueChanged.AddListener(delegate
+                {
+                    if (tagToggle.isOn)
+                    {
+                        SampleTag selectedTag = selectedSessionSearchTags.Find(x => x.Category == category);
+                        selectedTag.Tags.Remove(tag);
+                        if (selectedTag.Tags.Count == 0)
+                        {
+                            selectedSessionSearchTags.Remove(selectedTag);
+                        }
+                        tagToggle.GetComponentInChildren<Image>().color = Color.white;
+                        CinecastManager.Instance.UpdateSessionSearchTags(selectedSessionSearchTags);
+
+                    }
+                    else
+                    {
+                        SampleTag selectedTag = selectedSessionSearchTags.Find(x => x.Category == category);
+                        if (selectedTag == null)
+                        {
+                            selectedTag = new SampleTag
+                            {
+                                Category = category,
+                                Tags = new List<string>()
+                            };
+                            selectedSessionSearchTags.Add(selectedTag);
+                        }
+                        selectedTag.Tags.Add(tag);
+                        tagToggle.GetComponentInChildren<Image>().color = Color.grey;
+                        CinecastManager.Instance.UpdateSessionSearchTags(selectedSessionSearchTags);
+                    }
+                });
+            }
         }
     }
 

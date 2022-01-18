@@ -6195,6 +6195,22 @@ MonoBehaviour:
   publicKey: pk_FpAeXy1sDkfNz22vWdBM
   secretKey: sk_Ijj02y1ZkOsa3MXyuf4q
   cinecastConfig: {fileID: 11400000, guid: 4c260f0bbc8164713901eaed066e87fc, type: 2}
+  AllowedSessionSearchTags:
+  - Category: Player
+    Tags:
+    - George
+    - Michael
+  - Category: Difficulty
+    Tags:
+    - Spicy
+    - Medium Spicy
+    - Extra Spicy
+  - Category: Fun
+    Tags:
+    - Yes
+    - No
+  SessionSearchTags: []
+  NewSessionStartTags: []
 --- !u!4 &1831072179
 Transform:
   m_ObjectHideFlags: 0
@@ -7038,6 +7054,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 168404440103644241, guid: c8120954479044c56bf6a77bad29f70a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 168404440103644241, guid: c8120954479044c56bf6a77bad29f70a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 168404440377951223, guid: c8120954479044c56bf6a77bad29f70a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 168404440377951223, guid: c8120954479044c56bf6a77bad29f70a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 168404440377951223, guid: c8120954479044c56bf6a77bad29f70a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 168404440849826305, guid: c8120954479044c56bf6a77bad29f70a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 168404441197164247, guid: c8120954479044c56bf6a77bad29f70a, type: 3}
       propertyPath: m_Pivot.x
       value: 0
