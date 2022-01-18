@@ -63,7 +63,6 @@ public class CinecastManager : MonoBehaviour
     public string SessionName { get; set; }
     public string SessionPassword { get; set; }
     public bool AllowSpectorEvents { get; set; }
-    public bool CalculateInterest { get; set; }
     public string EnteredPassword { get; set; }
     public bool SelectedSessionLocked { get; set; }
 
@@ -208,11 +207,8 @@ public class CinecastManager : MonoBehaviour
 
         PrepareAppSettingsService();
         PrepareWatcherService();
-
-        if(CalculateInterest)
-        {
-            PreparePoiRecordingService();
-        }
+        PreparePoiRecordingService();
+   
 
         if(AllowSpectorEvents)
         {
@@ -237,7 +233,7 @@ public class CinecastManager : MonoBehaviour
 
         IList<SessionSpectatorEventSetting> sessionSpectatorEvents = (AllowSpectorEvents) ?  GetSpectatorEventSettings() : null;
 
-        SessionRecordingStartRequest_InterestCalc interestCalc = (CalculateInterest) ? SessionRecordingStartRequest_InterestCalc.Record : SessionRecordingStartRequest_InterestCalc.None;
+        SessionRecordingStartRequest_InterestCalc interestCalc = SessionRecordingStartRequest_InterestCalc.Record;
         (bool isRecording, RecordingSessionInfo recordingSessionInfo) = await recordingService.StartRecording
         (SessionName,
         applicationVersion,

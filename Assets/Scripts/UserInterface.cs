@@ -21,7 +21,6 @@ public class UserInterface : MonoBehaviour
     public Button startNewSessionButton;
     public GameObject newSessionSettingsPanel;
     public Toggle canSendSpecatorEvents;
-    public Toggle calculateInterest;
     public TMP_InputField sessionNameInput;
     public TMP_InputField sessionPasswordInput;
     public Button startButton;
@@ -238,7 +237,6 @@ public class UserInterface : MonoBehaviour
                 CinecastManager.Instance.SessionName = sessionNameInput.text;
                 CinecastManager.Instance.SessionPassword = sessionPasswordInput.text;
                 CinecastManager.Instance.AllowSpectorEvents = canSendSpecatorEvents;
-                CinecastManager.Instance.CalculateInterest = calculateInterest;
                 CinecastManager.Instance.PrepareRecordingService();
                 sessionManagementPanel.SetActive(false);
             });
