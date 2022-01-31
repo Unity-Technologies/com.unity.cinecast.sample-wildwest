@@ -60,8 +60,6 @@ public class DemoManager : MonoBehaviour
             hiders[i].transform.position = hiders[i].sessionStartTransform.position;
             ActiveHiders.Add(hiders[i]);
         }
-
-        CinecastManager.Instance.StartRecording();
     }
 
     public void SetupPlayback()

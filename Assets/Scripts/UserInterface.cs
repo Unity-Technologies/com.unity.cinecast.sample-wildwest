@@ -242,7 +242,7 @@ public class UserInterface : MonoBehaviour
                 }
                 else
                 {
-                    CinecastManager.Instance.PreparePlaybackService();
+                    CinecastManager.Instance.PreparePlaybackServices();
                     sessionManagementPanel.SetActive(false);
                 }
             });
@@ -435,7 +435,7 @@ public class UserInterface : MonoBehaviour
             else
             {
                 CinecastManager.Instance.EnteredPassword = passwordInput.text;
-                CinecastManager.Instance.PreparePlaybackService();
+                CinecastManager.Instance.PreparePlaybackServices();
                 passwordPanel.SetActive(false);
                 sessionManagementPanel.SetActive(false);
             }
@@ -539,6 +539,7 @@ public class UserInterface : MonoBehaviour
         {
             playbackPanel.SetActive(false);
             CinecastManager.Instance.StopPlayBack();
+            CinecastManager.Instance.DisposePlaybackServices();
             DemoManager.Instance.SwitchDemoState(DemoState.MainMenu);
         });
     }
@@ -561,6 +562,7 @@ public class UserInterface : MonoBehaviour
             sessionEndedPanel.SetActive(false);
             playbackPanel.SetActive(false);
             CinecastManager.Instance.StopPlayBack();
+            CinecastManager.Instance.DisposePlaybackServices();
             DemoManager.Instance.SwitchDemoState(DemoState.MainMenu);
         });
     }

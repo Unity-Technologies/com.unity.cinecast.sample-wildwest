@@ -78,9 +78,9 @@ public class CinecastManager : MonoBehaviour
     public PlaybackState playbackState { get; set; }
 
     public string CurrentTime { get; private set; }
-    public Dictionary<string,IPoiInterestData> CurrentInterestData { get; private set; }
+    public Dictionary<string,PoiFrameInterest> CurrentInterestData { get; private set; }
     public IReadOnlyDictionary<string, IPoiItem> CurrentPoiStates { get; private set; }
-    public IReadOnlyList<ClientSpectatorEventSetting> SpectatorEvents { get; private set; }
+    public IReadOnlyList<ClientSpectatorEvent> SpectatorEvents { get; private set; }
     public int Spectators { get; private set; }
 
     public bool PlaybackIsLive { get; private set; }
@@ -140,6 +140,9 @@ public class CinecastManager : MonoBehaviour
         if(showCinecastLogs){
             Debug.Log("Cinecast Authorization Successful!");
         }
+        
+        
+        
         GetRecentSessions();
     }
 
@@ -297,28 +300,23 @@ public class CinecastManager : MonoBehaviour
     
     
 #endregion
-#region AppSettings
-    private async void PrepareAppSettingsService()
+#region Recording
+    public async void PrepareRecordingService()
     {
-        appSettingsService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IAppSettingsService>(DiscoveryOptions.Required).ConfigureAwait(true);
+        recordingService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IRecordingService>(DiscoveryOptions.Required).ConfigureAwait(false);
+        appSettingsService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IAppSettingsService>(DiscoveryOptions.Required).ConfigureAwait(false);
+        watcherService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IWatcherService>(DiscoveryOptions.Required).ConfigureAwait(false);
+        poiRecordingService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IPoiRecordingService>(DiscoveryOptions.Required).ConfigureAwait(false);
+        appSettings = Cinecast.Generated.AppSettings_Basic.AppSetting;
+    
+        CreateInitialPOIs();
+        watcherService.OnWatcherCountsUpdated += OnWatcherCountsUpdated;
 
         if(showCinecastLogs)
         {
             Debug.Log("Appsettings Service Started!");
         }
-
-        appSettings = Cinecast.Generated.AppSettings_Basic.AppSetting;
-    }
-#endregion
-#region Recording
-    public async void PrepareRecordingService()
-    {
-        recordingService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IRecordingService>(DiscoveryOptions.Required).ConfigureAwait(true);
-
-        PrepareAppSettingsService();
-        PrepareWatcherService();
-        PreparePoiRecordingService();
-   
+    
 
         if(AllowSpectorEvents)
         {
@@ -330,7 +328,11 @@ public class CinecastManager : MonoBehaviour
             Debug.Log("Recording Services Prepared.");
         }
 
-        DemoManager.Instance.SwitchDemoState(DemoState.Recording);
+        mainThreadDispatcher.Dispatch(() =>
+        {
+            DemoManager.Instance.SwitchDemoState(DemoState.Recording);
+        });
+        StartRecording();
     }
 
     public async void StartRecording()
@@ -361,6 +363,7 @@ public class CinecastManager : MonoBehaviour
         {
             if (isRecording)
             {
+                cinecastState = CinecastState.Recording;
                 DemoManager.Instance.StartAgents();
                 if(showCinecastLogs)
                 {
@@ -380,17 +383,21 @@ public class CinecastManager : MonoBehaviour
 
     public async void StopRecording()
     {
-        cinecastState = CinecastState.Ready;
-
-        await recordingService.StopRecording().ConfigureAwait(true);
+        await recordingService.StopRecording().ConfigureAwait(false);
 
         if(showCinecastLogs)
         {
             Debug.Log("Recording stopped.");
         }
+        
+        mainThreadDispatcher.Dispatch(()=>
+        {
+            DemoManager.Instance.StopAgents();
+            DemoManager.Instance.SwitchDemoState(DemoState.MainMenu);
+            DisposeRecordingServices();
+        });
 
-        DemoManager.Instance.StopAgents();
-        DemoManager.Instance.SwitchDemoState(DemoState.MainMenu);
+        cinecastState = CinecastState.Ready;
     }
 
     private async void RecordFrame()
@@ -413,9 +420,31 @@ public class CinecastManager : MonoBehaviour
             (RecordingState recordingState, long lastFrame) = await recordingService.RecordAsync(data).ConfigureAwait(false);
         }
     }
+    
+    public void DisposeRecordingServices()
+    {
+        SDKRuntimeCinecast.Instance.Discovery.Release(recordingService);
+        recordingService = null;
+
+        SDKRuntimeCinecast.Instance.Discovery.Release(appSettingsService);
+        appSettingsService = null;
+        appSettings = null;
+
+        SDKRuntimeCinecast.Instance.Discovery.Release(watcherService);
+        watcherService = null;
+
+        SDKRuntimeCinecast.Instance.Discovery.Release(poiRecordingService);
+        poiRecordingService = null;
+
+        if (spectatorRecordingService != null)
+        {
+            SDKRuntimeCinecast.Instance.Discovery.Release(spectatorRecordingService);
+            spectatorRecordingService = null;
+        }
+    }
 #endregion
 #region Playback
-    public async void PreparePlaybackService()
+    public async void PreparePlaybackServices()
     {
         playbackService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IPlaybackService>(DiscoveryOptions.Required).ConfigureAwait(false);
         playbackService.UpdateSettings(cinecastConfig.PlaybackConfig);
@@ -425,11 +454,37 @@ public class CinecastManager : MonoBehaviour
             Debug.Log("Playback Services Prepared.");
         }
 
-        PrepareAppSettingsService();
-        PrepareInterestPlaybackService();
-        PreparePoiPlaybackService();
-        PrepareSpectatorPlaybackService();
-        PrepareWatcherService();
+        appSettingsService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IAppSettingsService>(DiscoveryOptions.Required).ConfigureAwait(false);
+        appSettings = appSettings = Cinecast.Generated.AppSettings_Basic.AppSetting;
+        if(showCinecastLogs)
+        {
+            Debug.Log("Appsettings Service Started!");
+        }
+    
+        //Interest Playback Service
+        interestPlaybackService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IInterestPlaybackService>(DiscoveryOptions.Required).ConfigureAwait(false);
+
+        //Spectator Service
+        spectatorPlaybackService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<ISpectatorPlaybackService>(DiscoveryOptions.Required).ConfigureAwait(false);
+
+        if (showCinecastLogs)
+        {
+            Debug.Log("Spectator Playback Service Started");
+        }
+
+        GetSpectatorTimeline();
+        spectatorPlaybackService.OnSpectatorEventInventoryUpdated += OnSpectatorEventInventoryUpdated;
+        spectatorPlaybackService.OnSpectatorEventTimelineUpdated += OnSpectatorEventsTimelineUpdated;
+        SpectatorEvents = appSettingsService.GetSpectatorEvents(appSettings);
+    
+        watcherService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IWatcherService>(DiscoveryOptions.Required).ConfigureAwait(false);
+        watcherService.OnWatcherCountsUpdated += OnWatcherCountsUpdated;
+    
+        poiPlaybackService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IPoiPlaybackService>(DiscoveryOptions.Required).ConfigureAwait(false);
+
+        poiPlaybackService.OnPoiVersionUpdated += OnPOIVersionUpdate;
+    
+        GetPOIStates();
         InitiatePlayback();
     }
 
@@ -441,11 +496,11 @@ public class CinecastManager : MonoBehaviour
         PlaybackIsLive = !playbackSessionInfo.IsComplete;
         if (PlaybackIsLive)
         {
-            await playbackService.PreloadLiveFrames();
+            await playbackService.PreloadLiveFrames().ConfigureAwait(false);
         }
         else
         {
-            await playbackService.PreloadFromFrame(1);
+            await playbackService.PreloadFromFrame(1).ConfigureAwait(false);
         }
 
         TotalFrames = playbackSessionInfo.TotalFrames;
@@ -456,11 +511,8 @@ public class CinecastManager : MonoBehaviour
             // Get first frame so POIs can be set up
             playbackService.GetNextFrame();
             DemoManager.Instance.SwitchDemoState(DemoState.Playback);
-            // Autoplay live session
-            if(PlaybackIsLive)
-            {
-                playbackState = PlaybackState.Playing;
-            }
+            playbackState = PlaybackState.Playing;
+            
         });
     }
 
@@ -477,7 +529,6 @@ public class CinecastManager : MonoBehaviour
             (bool success, FrameInfo frameInfo) = playbackService.GetNextFrame();
             if (success)
             {
-                interestPlaybackService.GetRange();
                 cinecastState = CinecastState.Playback;
                 
                 if (spectatorEventsTimeline != null)
@@ -535,102 +586,102 @@ public class CinecastManager : MonoBehaviour
 
     public async void StopPlayBack()
     {
-        await playbackService.StopPlayback();
-        DemoManager.Instance.StopAgents();
-
         playbackState = PlaybackState.Paused;
+        await playbackService.StopPlayback().ConfigureAwait(false);
+        DemoManager.Instance.StopAgents();
+        
         cinecastState = CinecastState.Ready;
+    }
+    
+    public void DisposePlaybackServices()
+    {
+        SDKRuntimeCinecast.Instance.Discovery.Release(playbackService);
+        playbackService = null;
+
+        SDKRuntimeCinecast.Instance.Discovery.Release(appSettingsService);
+        appSettingsService = null;
+
+        SDKRuntimeCinecast.Instance.Discovery.Release(interestPlaybackService);
+        interestPlaybackService = null;
+
+        SDKRuntimeCinecast.Instance.Discovery.Release(spectatorPlaybackService);
+        spectatorPlaybackService = null;
+
+        SDKRuntimeCinecast.Instance.Discovery.Release(watcherService);
+        watcherService = null;
+
+        SDKRuntimeCinecast.Instance.Discovery.Release(poiPlaybackService);
+        poiPlaybackService = null;
     }
 #endregion
 #region Interest
-    public async void PrepareInterestPlaybackService()
+public float GetInterestPerPoi(string name)
     {
-        interestPlaybackService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IInterestPlaybackService>(DiscoveryOptions.Required).ConfigureAwait(false);
-
-        interestPlaybackService.OnRangeUpdated += OnRangeUpdated;
-
-        if(showCinecastLogs)
-        {
-            Debug.Log("Interest Playback Service Prepared!");
-        }
-
-
-    }
-
-    public float GetInterestPerPoi(string name)
-    {
-        if(CurrentInterestData == null)
+        if (CurrentInterestData == null)
         {
             return 0f;
         }
 
-        IPoiInterestData interestData;
-        CurrentInterestData.TryGetValue(name, out interestData);
-
-        return (interestData != null) ? interestData.MinInterest : 0f;
+        PoiFrameInterest frameInterest;
+        if (CurrentInterestData.TryGetValue(name, out frameInterest))
+        {
+            return frameInterest.FrameData.Interest;
+        }
+        else
+        {
+            return 0f;
+        }
     }
 
     void UpdateInterest()
     {
         if (CurrentInterestData == null)
         {
-            CurrentInterestData = new Dictionary<string, IPoiInterestData>();
+            CurrentInterestData = new Dictionary<string, PoiFrameInterest>();
         }
 
         for (int i = 0; i < DemoManager.Instance.AllAgents.Count; i++)
         {
             string name = DemoManager.Instance.AllAgents[i].AgentId;
-            IPoiInterestData interestData = GetInterestPlayback(name, CurrentFrame);
+            PoiFrameInterest frameInterest = GetInterest(name, CurrentFrame);
 
-            if (interestData != null)
+            if (frameInterest!= null)
             {
                 if (CurrentInterestData.ContainsKey(name))
                 {
-                    CurrentInterestData[name] = interestData;
+                    CurrentInterestData[name] = frameInterest;
                 }
                 else
                 {
-                    CurrentInterestData.Add(name, interestData);
+                    CurrentInterestData.Add(name, frameInterest);
                 }
             }
         }
     }
 
-    private void OnRangeUpdated(object sender, EventArgs e)
+    private PoiFrameInterest GetInterest(string id, long frameIndex)
     {
-     
-    
-    }
-
-    private IPoiInterestData GetInterestPlayback(string id, long frameIndex)
-    {
-        InterestFrameRange frameRange = interestPlaybackService.GetRange();
-        IPoiInterestData interestData = default;
-
-        if(frameRange.Ranges.TryGetValue(id,out InterestSnapshotRange snapshotRange))
+        IReadOnlyDictionary<string, PoiFrameInterest> frameInterests;
+        if (interestPlaybackService == null)
         {
-            interestData = snapshotRange.GetSnapshot(frameIndex);
+            Debug.LogError("INTEREST SERVICE IS NULL!!!");
+        }
+        interestPlaybackService.GetFrameInterest(frameIndex, out frameInterests);
+        
+        if (frameInterests == null)
+        {
+            return null;
+        }
+        if (frameInterests.TryGetValue(id, out PoiFrameInterest interest))
+        {
+            return interest;
         }
 
-        return interestData;
+        return null;
     }
 #endregion
 #region POI's
-    public async void PreparePoiRecordingService()
-    {
-        poiRecordingService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IPoiRecordingService>(DiscoveryOptions.Required).ConfigureAwait(false);
-        CreateInitialPOIs();
-    }
-
-    public async void PreparePoiPlaybackService()
-    {
-        poiPlaybackService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IPoiPlaybackService>(DiscoveryOptions.Required).ConfigureAwait(false);
-
-        poiPlaybackService.OnPoiVersionUpdated += OnPOIVersionUpdate;
-        GetPOIStates();
-    }
-
-    private void GetPOIStates()
+private void GetPOIStates()
     {
         currentPoiVersion = poiPlaybackService.CurrentPoiVersion;
         CurrentPoiStates = poiPlaybackService.GetPoiState();
@@ -732,13 +783,8 @@ public class CinecastManager : MonoBehaviour
 
 #endregion
 #region Spectators
-    private async void PrepareWatcherService()
-    {
-        watcherService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<IWatcherService>(DiscoveryOptions.Required).ConfigureAwait(false);
-        watcherService.OnWatcherCountsUpdated += OnWatcherCountsUpdated;
-    }
 
-    private void OnWatcherCountsUpdated(object sender, IReadOnlyDictionary<string,long> watcherCounts)
+private void OnWatcherCountsUpdated(object sender, IReadOnlyDictionary<string,long> watcherCounts)
     {
         int watchers = 0;
         foreach(var count in watcherCounts)
@@ -752,7 +798,7 @@ public class CinecastManager : MonoBehaviour
 #region SpectatorEvents
     public async void PrepareSpectatorEventRecordingService()
     {
-        spectatorRecordingService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<ISpectatorRecordingService>(DiscoveryOptions.Required).ConfigureAwait(true);
+        spectatorRecordingService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<ISpectatorRecordingService>(DiscoveryOptions.Required).ConfigureAwait(false);
 
         spectatorRecordingService.OnIncomingRequestEvents += OnIncomingSpectatorEventsRequest;
 
@@ -764,7 +810,7 @@ public class CinecastManager : MonoBehaviour
 
     public async void PrepareSpectatorPlaybackService()
     {
-        spectatorPlaybackService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<ISpectatorPlaybackService>(DiscoveryOptions.Required).ConfigureAwait(true);
+        spectatorPlaybackService = await SDKRuntimeCinecast.Instance.Discovery.Resolve<ISpectatorPlaybackService>(DiscoveryOptions.Required).ConfigureAwait(false);
 
         if(showCinecastLogs)
         {
@@ -866,7 +912,7 @@ public class CinecastManager : MonoBehaviour
     }
     private IList<SessionSpectatorEventSetting> GetSpectatorEventSettings()
     {
-        IReadOnlyList<ClientSpectatorEventSetting> settings = appSettingsService.GetSpectatorEvents(appSettings);
+        IReadOnlyList<ClientSpectatorEvent> settings = appSettingsService.GetSpectatorEvents(appSettings);
         IList<SessionSpectatorEventSetting> sessionSettings = new List<SessionSpectatorEventSetting>();
 
         foreach(var setting in settings)
@@ -884,6 +930,12 @@ public class CinecastManager : MonoBehaviour
     }
 #endregion
 
+    private void OnDisable()
+    {
+        DisposePlaybackServices();
+        DisposeRecordingServices();
+        mainThreadDispatcher.Dispose();
+    }
 }
 
 public enum CinecastState
