@@ -52,14 +52,12 @@ public class CinecastManager : MonoBehaviour
     private IInterestPlaybackService interestPlaybackService;
     private IWatcherService watcherService;
 
-    private bool currentSessionIsLive;
-
     private long lastFrame;
 
     private List<Cinecast.Api.Server.Extraction.SpectatorEvent> spectatorEventsTimeline;
     
-    public List<SessionTag> SessionSearchTags = new List<SessionTag>();
-    public List<SessionTag> NewSessionStartTags = new List<SessionTag>();
+    private List<SessionTag> SessionSearchTags = new List<SessionTag>();
+    private List<SessionTag> NewSessionStartTags = new List<SessionTag>();
 
     #region Properties
     public static CinecastManager Instance { get; private set; }
@@ -140,8 +138,6 @@ public class CinecastManager : MonoBehaviour
         if(showCinecastLogs){
             Debug.Log("Cinecast Authorization Successful!");
         }
-        
-        
         
         GetRecentSessions();
     }
@@ -383,6 +379,8 @@ public class CinecastManager : MonoBehaviour
 
     public async void StopRecording()
     {
+        cinecastState = CinecastState.Ready;
+        
         await recordingService.StopRecording().ConfigureAwait(false);
 
         if(showCinecastLogs)
@@ -396,8 +394,7 @@ public class CinecastManager : MonoBehaviour
             DemoManager.Instance.SwitchDemoState(DemoState.MainMenu);
             DisposeRecordingServices();
         });
-
-        cinecastState = CinecastState.Ready;
+        
     }
 
     private async void RecordFrame()
@@ -551,11 +548,6 @@ public class CinecastManager : MonoBehaviour
 
                 CurrentFrame = frameInfo.Frame;
                 CurrentTime = $"{frameInfo.FrameTime.Minutes:00}:{frameInfo.FrameTime.Seconds:00}";
-                if (CurrentFrame - lastFrame != 1)
-                {
-                    // Debug.LogError("Current Frame: " +m_CurrentFrame + " last frame:" + lastFrame + " Time: " + m_CurrentTime);
-                }
-
                 lastFrame = CurrentFrame;
                 UpdateInterest();
 
@@ -588,7 +580,11 @@ public class CinecastManager : MonoBehaviour
     {
         playbackState = PlaybackState.Paused;
         await playbackService.StopPlayback().ConfigureAwait(false);
-        DemoManager.Instance.StopAgents();
+
+        mainThreadDispatcher.Dispatch(() =>
+        {
+            DemoManager.Instance.StopAgents();
+        });
         
         cinecastState = CinecastState.Ready;
     }
@@ -930,11 +926,9 @@ private void OnWatcherCountsUpdated(object sender, IReadOnlyDictionary<string,lo
     }
 #endregion
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        DisposePlaybackServices();
-        DisposeRecordingServices();
-        mainThreadDispatcher.Dispose();
+        SDKRuntimeCinecast.Instance.Dispose();
     }
 }
 

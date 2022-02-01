@@ -55,7 +55,6 @@ public class UserInterface : MonoBehaviour
     public Button playPauseButton;
     public Sprite playSprite;
     public Sprite pauseSprite;
-    public Sprite stopSprite;
     public Slider timelineSlider;
     public TextMeshProUGUI timeText;
     public GameObject sessionEndedPanel;
@@ -78,14 +77,14 @@ public class UserInterface : MonoBehaviour
     private bool notificationShow;
     private float notificationTimer;
 
-    private static UserInterface m_Instance;
     private SessionManagementState sessionManagementState;
     public List<SampleTag> selectedSessionSearchTags;
     public List<SampleTag> selectedTagsForSessionStart;
 
 #region Properties
-    public static UserInterface Instance { get{ return m_Instance;}}
-#endregion
+    public static UserInterface Instance { get; private set; }
+
+    #endregion
 
     private enum SessionManagementState
     {
@@ -95,8 +94,8 @@ public class UserInterface : MonoBehaviour
 
     private void Awake()
     {
-        if(m_Instance == null){
-            m_Instance = this;
+        if(Instance == null){
+            Instance = this;
             GameObject.DontDestroyOnLoad(this.gameObject);
         } else {
             Destroy(gameObject);
@@ -452,8 +451,8 @@ public class UserInterface : MonoBehaviour
     {
         recordingPanel.SetActive(true);
 
-        watcherText.text = string.Format("{0} Spectators",CinecastManager.Instance.Spectators);
-        currentStatsText.text = string.Format("{0} Hiders remaining!",DemoManager.Instance.ActiveHiders.Count);
+        watcherText.text = $"{CinecastManager.Instance.Spectators} Spectators";
+        currentStatsText.text = $"{DemoManager.Instance.ActiveHiders.Count} Hiders remaining!";
 
         stopRecordingButton.onClick.RemoveAllListeners();
         stopRecordingButton.onClick.AddListener(() => {
@@ -635,7 +634,7 @@ public class UserInterface : MonoBehaviour
     public void SetupSpecatorEventsPanel()
     {
 
-        if(CinecastManager.Instance.SpectatorEvents == null || !CinecastManager.Instance.AllowSpectorEvents)
+        if(CinecastManager.Instance.SpectatorEvents == null || !CinecastManager.Instance.AllowSpectorEvents || !CinecastManager.Instance.PlaybackIsLive)
         {
             specatorEventPanel.SetActive(false);
             return;
