@@ -9,6 +9,7 @@ Packages/com.unity.cinecast*
 /[Aa]uto[Bb]uild/
 
 .vscode/
+.vsconfig
 .vs/
 
 *.csproj
