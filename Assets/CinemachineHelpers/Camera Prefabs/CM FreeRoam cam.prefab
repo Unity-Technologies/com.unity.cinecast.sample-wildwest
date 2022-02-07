@@ -1,0 +1,175 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5043929250679622055
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3175369865839256849}
+  - component: {fileID: 7219645357177636873}
+  - component: {fileID: 6771859060073895984}
+  - component: {fileID: 6827839496844775241}
+  - component: {fileID: 1462726675406323496}
+  - component: {fileID: 3624783704523464635}
+  m_Layer: 0
+  m_Name: CM FreeRoam cam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &3175369865839256849
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5043929250679622055}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7219645357177636873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5043929250679622055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97899287cdea9ab49919a34725457d20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Value:
+    Value:
+      Value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+--- !u!114 &6771859060073895984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5043929250679622055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58a36b2063b37b142ace70871364a0aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6827839496844775241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5043929250679622055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 128a5cb3f2ebf724b916d873a60b7e03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OutputChannel:
+    Referent:
+      Value:
+        Value:
+          x: 0
+          y: 0
+          z: 0
+          w: 0
+    m_CachedName: 
+    m_CachedScene: {fileID: 0}
+  m_Priority: 0
+  m_BlendHint: 0
+  FollowTarget:
+    Referent:
+      Value:
+        Value:
+          x: 0
+          y: 0
+          z: 0
+          w: 0
+    m_CachedName: 
+    m_CachedScene: {fileID: 0}
+  LookAtTarget:
+    Referent:
+      Value:
+        Value:
+          x: 0
+          y: 0
+          z: 0
+          w: 0
+    m_CachedName: 
+    m_CachedScene: {fileID: 0}
+  m_Lens:
+    FieldOfView: 40
+    OrthographicSize: 10
+    NearClipPlane: 0.1
+    FarClipPlane: 5000
+    Dutch: 0
+    LensShift:
+      x: 0
+      y: 0
+--- !u!114 &1462726675406323496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5043929250679622055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abc5a0af9f24b264bad95dbc4d86c369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  InitialStateSource: {fileID: 0}
+  WalkSpeed: 10
+  RunSpeed: 30
+  LookSpeed: 5
+  ZoomSpeed: 20
+  MinFOV: 10
+  MaxFOV: 110
+  PositionDamping: 0.3
+--- !u!114 &3624783704523464635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5043929250679622055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac6294dfcc0515418eccddbf5c18182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Value:
+    Lookahead:
+      LookaheadTime: 0
+      Smoothing: 0.2
+      IgnoreVertical: 0
+    CenterOnActivate: 1
+    Damping:
+      x: 1
+      y: 1
+  m_ComposerZones:
+    ScreenPosition:
+      x: 0
+      y: 0
+    DeadZoneSize:
+      x: 0
+      y: 0
+    SoftZoneSize:
+      x: 0.6
+      y: 0.6
+    SoftZoneBias:
+      x: 0
+      y: 0

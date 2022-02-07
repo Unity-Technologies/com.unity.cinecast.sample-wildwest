@@ -1,0 +1,271 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1326021046717455150
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2062156254142237847}
+  - component: {fileID: 2835975101079057050}
+  - component: {fileID: 3527890638882425093}
+  - component: {fileID: 4056014392869823688}
+  - component: {fileID: 3101000169954360668}
+  - component: {fileID: 703387993505081811}
+  - component: {fileID: 6726102342442069306}
+  m_Layer: 0
+  m_Name: CM ThirdPerson cam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2062156254142237847
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326021046717455150}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2835975101079057050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326021046717455150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97899287cdea9ab49919a34725457d20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Value:
+    Value:
+      Value:
+        x: 0
+        y: 0
+        z: 0
+        w: 0
+--- !u!114 &3527890638882425093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326021046717455150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58a36b2063b37b142ace70871364a0aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4056014392869823688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326021046717455150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 128a5cb3f2ebf724b916d873a60b7e03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Standby: 0
+  m_Priority: 0
+  AssignTo:
+    Referent:
+      Value:
+        Value:
+          x: 0
+          y: 0
+          z: 0
+          w: 0
+    m_CachedName: 
+    m_CachedScene: {fileID: 0}
+  m_BlendHint: 0
+  FollowTarget:
+    Referent:
+      Value:
+        Value:
+          x: 2905352075
+          y: 1225284025
+          z: 2381170872
+          w: 1839724463
+    m_CachedName: TargetProxy
+    m_CachedScene: {fileID: 0}
+  LookAtTarget:
+    Referent:
+      Value:
+        Value:
+          x: 2905352075
+          y: 1225284025
+          z: 2381170872
+          w: 1839724463
+    m_CachedName: TargetProxy
+    m_CachedScene: {fileID: 0}
+  m_Lens:
+    FieldOfView: 67
+    OrthographicSize: 10
+    NearClipPlane: 0.1
+    FarClipPlane: 5000
+    Dutch: 0
+    LensShift:
+      x: 0
+      y: 0
+--- !u!114 &3101000169954360668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326021046717455150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4d95496cdd736d448de60d97516d030, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Value:
+    Binding: 4
+    Damping:
+      x: 0
+      y: 1
+      z: 0
+    AngularDamping: 1
+    Top:
+      Height: 10
+      Radius: 4
+    Middle:
+      Height: 2
+      Radius: 8
+    Bottom:
+      Height: -2
+      Radius: 5
+    SplineCurvature: 0.281
+  HorizontalAxis:
+    InputName: Mouse X
+    Axis:
+      Value:
+        Value: 0
+        Range:
+          x: -180
+          y: 180
+        Wrap: 1
+      InputControl:
+        InputValue: 0
+        Multiplier: 1
+        AccelTime: 0.1
+        DecelTime: 0.1
+      Recentering:
+        Enabled: 1
+        Center: 0
+        Wait: 4
+        Time: 4
+  VerticalAxis:
+    InputName: Mouse Y
+    Axis:
+      Value:
+        Value: 0
+        Range:
+          x: -100
+          y: 100
+        Wrap: 0
+      InputControl:
+        InputValue: 0
+        Multiplier: -1
+        AccelTime: 0.1
+        DecelTime: 0.2
+      Recentering:
+        Enabled: 0
+        Center: 0
+        Wait: 4
+        Time: 4
+  RadialAxis:
+    InputName: Mouse ScrollWheel
+    Axis:
+      Value:
+        Value: 1
+        Range:
+          x: 0.3
+          y: 3
+        Wrap: 0
+      InputControl:
+        InputValue: 0
+        Multiplier: -5
+        AccelTime: 0
+        DecelTime: 0.2
+      Recentering:
+        Enabled: 1
+        Center: 1
+        Wait: 4
+        Time: 4
+--- !u!114 &703387993505081811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326021046717455150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ac6294dfcc0515418eccddbf5c18182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Value:
+    Lookahead:
+      LookaheadTime: 0
+      Smoothing: 0.96
+      IgnoreVertical: 1
+    CenterOnActivate: 1
+    Damping:
+      x: 0.2
+      y: 0.2
+  m_ComposerZones:
+    ScreenPosition:
+      x: 0
+      y: 0
+    DeadZoneSize:
+      x: 0
+      y: 0
+    SoftZoneSize:
+      x: 0.6
+      y: 0.6
+    SoftZoneBias:
+      x: 0
+      y: 0
+--- !u!114 &6726102342442069306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326021046717455150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7a0e7d0f2204a44393794fdffb4778e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Value:
+    CollideAgainst:
+      serializedVersion: 2
+      m_Bits: 35782657
+    MinimumDistanceFromTarget: 1
+    MinimumOcclusionTime: 0.2
+    CameraRadius: 0.2
+    SmoothingTime: 0.5
+    Damping: 0.3
+    DampingWhenOccluded: 0.1
+    QualityDegradation:
+      Curve:
+        A: 0
+        B: 1
+        Bias: 0
+      Duration: 1
