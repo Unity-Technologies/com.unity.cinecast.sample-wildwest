@@ -1,4 +1,4 @@
-Packages/com.unity.cinecast*
+Packages/com.unity.cinecast.cinematographer*
 Packages/com.unity.cinemachine*
 Packages/com.unity.entities*
 Packages/com.unity.jobs*
@@ -27,7 +27,6 @@ Packages/com.unity.stableid*
 .idea/
 *.VC.*
 .DS_Store
-*~
 *.swp
 
 *.log

@@ -82,9 +82,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 128a5cb3f2ebf724b916d873a60b7e03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Standby: 0
-  m_Priority: 0
-  AssignTo:
+  OutputChannel:
     Referent:
       Value:
         Value:
@@ -94,6 +92,7 @@ MonoBehaviour:
           w: 0
     m_CachedName: 
     m_CachedScene: {fileID: 0}
+  m_Priority: 0
   m_BlendHint: 0
   FollowTarget:
     Referent:
@@ -253,7 +252,7 @@ MonoBehaviour:
     FollowOffset:
       x: 0
       y: 2
-      z: 0
+      z: -5
     Damping:
       x: 0.2
       y: 1
@@ -272,14 +271,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Value:
-    SearchRadius: 50
-    MinimumTargetDistance: 2
+    SearchRadius: 10
+    MinimumTargetDistance: 1
     AutoLookAt: 1
     CameraTargetStickiness: 4
     AngularHysteresis: 5
-    FollowTargetFixedScale: 0
+    FollowTargetFixedScale: 1
     LegacyOcclusionLayers:
       serializedVersion: 2
-      m_Bits: 131073
+      m_Bits: 1
     GroupMemberBlendTime: 1
     OptimalTargetDistance: 5

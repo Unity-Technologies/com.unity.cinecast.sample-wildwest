@@ -766,6 +766,7 @@ private void GetPOIStates()
 
             poiRecordingService.SetPosition(agentId, position);
             poiRecordingService.SetRotation(agentId, rotation);
+            poiRecordingService.SetRadius(agentId, 1);
         };
     }
 
