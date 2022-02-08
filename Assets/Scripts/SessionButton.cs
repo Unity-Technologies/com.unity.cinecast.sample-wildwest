@@ -11,4 +11,5 @@ public class SessionButton : MonoBehaviour
     public TextMeshProUGUI sessionLength;
     public Button button;
     public Image passwordStateImage;
+    public Button trashButton;
 }

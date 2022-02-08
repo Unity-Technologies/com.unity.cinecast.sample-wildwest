@@ -7051,6 +7051,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 168404441197164245, guid: c8120954479044c56bf6a77bad29f70a, type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 0.543
+      objectReference: {fileID: 0}
     - target: {fileID: 168404441197164247, guid: c8120954479044c56bf6a77bad29f70a, type: 3}
       propertyPath: m_Pivot.x
       value: 0
