@@ -302,8 +302,17 @@ public class CinecastManager : MonoBehaviour
                 }
             });
         }
-        
-        
+    }
+
+    public async void DeleteSession(long sessionId)
+    {
+        await sessionManagementService.DeleteSession(sessionId).ConfigureAwait(false);
+        GetRecentSessions();
+
+        if (showCinecastLogs)
+        {
+            Debug.Log($"Successfully deleted session {sessionId}!");
+        }
     }
     
     

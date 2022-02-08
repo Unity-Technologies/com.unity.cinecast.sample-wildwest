@@ -404,6 +404,12 @@ public class UserInterface : MonoBehaviour
                 CinecastManager.Instance.SelectedSessionLocked = isLocked;
                 CinecastManager.Instance.SelectedSessionPlaybackID = sessionId;
         });
+        
+        sessionButtonScript.trashButton.onClick.RemoveAllListeners();
+        sessionButtonScript.trashButton.onClick.AddListener(() =>
+        {
+            CinecastManager.Instance.DeleteSession(sessionId);
+        });
     }
 
     public void RefreshSessionsPanel()
