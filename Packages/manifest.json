@@ -1,5 +1,7 @@
 {
   "dependencies": {
+	"com.unity.cinecast": "file:/Users/dini/Documents/com.unity.cinecast",
+    "com.unity.cinecast.core": "file:/Users/dini/Documents/com.unity.cinecast.core",
     "com.unity.collab-proxy": "1.15.12",
     "com.unity.ide.rider": "2.0.7",
     "com.unity.ide.visualstudio": "2.0.14",
