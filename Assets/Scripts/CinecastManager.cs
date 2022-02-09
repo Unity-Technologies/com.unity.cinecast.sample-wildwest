@@ -525,10 +525,10 @@ public class CinecastManager : MonoBehaviour
         });
     }
 
-    public void SeekToFrame(int frame)
+    public async void SeekToTime(float timeInSeconds)
     {
-        playbackService.SeekToFrame(frame);
-        SetFrameState();
+        await playbackService.SeekToTime(timeInSeconds).ConfigureAwait(false);
+        mainThreadDispatcher.Dispatch(SetFrameState);
     }
     
     public void SetFrameState()
@@ -553,8 +553,7 @@ public class CinecastManager : MonoBehaviour
                 SnapShot snapShot = JsonUtility.FromJson<SnapShot>(json);
                 for (int i = 0; i < snapShot.agentDatas.Length; i++)
                 {
-                    Agent currentAgent =
-                        DemoManager.Instance.AllAgents.Find(agent => agent.AgentId == snapShot.agentDatas[i].id);
+                    Agent currentAgent = DemoManager.Instance.AllAgents.Find(agent => agent.AgentId == snapShot.agentDatas[i].id);
                     currentAgent.PlaybackFrame(snapShot.agentDatas[i]);
                 }
 

@@ -517,7 +517,7 @@ public class UserInterface : MonoBehaviour
         timelineSlider.onValueChanged.RemoveAllListeners();
         timelineSlider.onValueChanged.AddListener(delegate
         {
-            CinecastManager.Instance.SeekToFrame((int)timelineSlider.value);
+            CinecastManager.Instance.SeekToTime(timelineSlider.value);
             UpdatePOIButtons();
         });
 
