@@ -44,6 +44,8 @@ public class Agent : MonoBehaviour
     public float CurrentSpeed { get; private set; }
     public string CurrentTrigger { get; private set; }
     public string AgentId { get; set; }
+    private float velY;
+    public float gravity;
 
     private void Awake()
     {
@@ -208,7 +210,14 @@ public class Agent : MonoBehaviour
         float speedModifier = Vector3.Dot(transform.forward, desiredDirection) < 0 ? 0 : 1;
 
         //Move towards / away from target
-        characterController.Move(transform.forward * CurrentSpeed * speedModifier * Time.deltaTime);
+        Vector3 velocity = transform.forward * CurrentSpeed * speedModifier;
+        velocity += Vector3.up * velY;
+        velY -= gravity * Time.deltaTime;
+        characterController.Move(velocity * Time.deltaTime);
+        if (characterController.isGrounded)
+        {
+            velY = 0;
+        }
         boostTrail.gameObject.SetActive(hasBoost);
     }
 

@@ -52,8 +52,6 @@ public class CinecastManager : MonoBehaviour
     private IInterestPlaybackService interestPlaybackService;
     private IWatcherService watcherService;
 
-    private long lastFrame;
-
     private List<Cinecast.Api.Server.Extraction.SpectatorEvent> spectatorEventsTimeline;
     
     private List<SessionTag> SessionSearchTags = new List<SessionTag>();
@@ -82,13 +80,14 @@ public class CinecastManager : MonoBehaviour
     public int Spectators { get; private set; }
 
     public bool PlaybackIsLive { get; private set; }
+    public float CurrentSessionDuration { get; private set; }
+    public float CurrentFrameTime { get; private set; }
 
     #endregion
 
     private void Awake()
     {
-        lastFrame = 0;
-        Application.targetFrameRate = 60;
+        Application.targetFrameRate = 30;
         
         if(Instance == null){
             Instance = this;
@@ -513,6 +512,8 @@ public class CinecastManager : MonoBehaviour
         string password = string.IsNullOrEmpty(EnteredPassword) ? null : EnteredPassword;
         (_, PlaybackSessionInfo playbackSessionInfo) = await playbackService.StartPlayback(SelectedSessionPlaybackID, @"1.0.0", null, password).ConfigureAwait(false);
 
+        CurrentSessionDuration = (float) playbackSessionInfo.EndTime.TotalSeconds;
+
         PlaybackIsLive = !playbackSessionInfo.IsComplete;
         if (PlaybackIsLive)
         {
@@ -524,22 +525,24 @@ public class CinecastManager : MonoBehaviour
         }
 
         TotalFrames = playbackSessionInfo.TotalFrames;
+        Debug.Log($"End time = {playbackSessionInfo.EndTime} and endindex = {playbackSessionInfo.EndIndex} and total frames = {playbackSessionInfo.TotalFrames}");
         CurrentFrame = 1;
 
         mainThreadDispatcher.Dispatch(() =>
         {
             // Get first frame so POIs can be set up
             playbackService.GetNextFrame();
+            UpdateInterest();
             DemoManager.Instance.SwitchDemoState(DemoState.Playback);
             playbackState = PlaybackState.Playing;
             
         });
     }
 
-    public void SeekToFrame(int frame)
+    public async void SeekToTime(float timeInSeconds)
     {
-        playbackService.SeekToFrame(frame);
-        SetFrameState();
+        await playbackService.SeekToTime(timeInSeconds).ConfigureAwait(false);
+        mainThreadDispatcher.Dispatch(SetFrameState);
     }
     
     public void SetFrameState()
@@ -564,14 +567,13 @@ public class CinecastManager : MonoBehaviour
                 SnapShot snapShot = JsonUtility.FromJson<SnapShot>(json);
                 for (int i = 0; i < snapShot.agentDatas.Length; i++)
                 {
-                    Agent currentAgent =
-                        DemoManager.Instance.AllAgents.Find(agent => agent.AgentId == snapShot.agentDatas[i].id);
+                    Agent currentAgent = DemoManager.Instance.AllAgents.Find(agent => agent.AgentId == snapShot.agentDatas[i].id);
                     currentAgent.PlaybackFrame(snapShot.agentDatas[i]);
                 }
 
                 CurrentFrame = frameInfo.Frame;
                 CurrentTime = $"{frameInfo.FrameTime.Minutes:00}:{frameInfo.FrameTime.Seconds:00}";
-                lastFrame = CurrentFrame;
+                CurrentFrameTime = (float) frameInfo.FrameTime.TotalSeconds;
                 UpdateInterest();
 
 

@@ -501,7 +501,7 @@ public class UserInterface : MonoBehaviour
 
         if(CinecastManager.Instance.playbackState == PlaybackState.Playing)
         {
-            timelineSlider.SetValueWithoutNotify(CinecastManager.Instance.CurrentFrame);
+            timelineSlider.SetValueWithoutNotify(CinecastManager.Instance.CurrentFrameTime);
             timeText.text = CinecastManager.Instance.CurrentTime;
         }
     }
@@ -510,14 +510,14 @@ public class UserInterface : MonoBehaviour
     {
         playbackPanel.SetActive(true);
 
-        timelineSlider.minValue = 1;
-        timelineSlider.maxValue = CinecastManager.Instance.TotalFrames;
-        timelineSlider.value = CinecastManager.Instance.CurrentFrame;
+        timelineSlider.minValue = 0;
+        timelineSlider.maxValue = CinecastManager.Instance.CurrentSessionDuration;
+        timelineSlider.value = CinecastManager.Instance.CurrentFrameTime;
 
         timelineSlider.onValueChanged.RemoveAllListeners();
         timelineSlider.onValueChanged.AddListener(delegate
         {
-            CinecastManager.Instance.SeekToFrame((int)timelineSlider.value);
+            CinecastManager.Instance.SeekToTime(timelineSlider.value);
             UpdatePOIButtons();
         });
 
