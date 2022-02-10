@@ -30,13 +30,9 @@ public class CameraManager : MonoBehaviour
                 if (!EnableCinemachine(false))
                     ReparentCamera(name);
                 break;
-            case "Auto": 
-                CinecastManager.Instance.SetSelectedCamera(string.Empty);
-                CinecastManager.Instance.SetSelectedPOI(string.Empty);
-                EnableCinemachine(isPlayback);
-                break;
             case "WorldView": 
                 CinecastManager.Instance.SetSelectedCamera("world");
+                //CinecastManager.Instance.SetSelectedCamera(string.Empty);
                 CinecastManager.Instance.SetSelectedPOI(string.Empty);
                 if (!EnableCinemachine(isPlayback))
                     ReparentCamera(name);

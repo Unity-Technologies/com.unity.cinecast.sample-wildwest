@@ -4071,8 +4071,6 @@ MonoBehaviour:
     cameraTransform: {fileID: 78170770}
   - name: LightGreen
     cameraTransform: {fileID: 603893773}
-  - name: Auto
-    cameraTransform: {fileID: 0}
 --- !u!4 &1255339310
 Transform:
   m_ObjectHideFlags: 0
