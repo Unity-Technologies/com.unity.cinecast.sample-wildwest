@@ -1,0 +1,29 @@
+{
+    "name": "Scripts",
+    "rootNamespace": "",
+    "references": [
+        "GUID:49b32c631e4804fd8b3f7d95044d30a0",
+        "GUID:8f5f95e6bfe2b45fa8a57f37132e0c04",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:41125482c00e644ad88c126a51c1a5cb",
+        "GUID:1809516da868a465090c590236e0ba2c",
+        "GUID:a85ac9b84cd73564c9192a2201d0317b",
+        "GUID:a6f754c37036d6c4ab2fb0390b8b95be",
+        "GUID:e607261367929d745bf1d780dd6c9b12"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.cinecast.cinematographer",
+            "expression": "0.1.0-preview.1",
+            "define": "CINECAST_CINEMATOGRAPHER"
+        }
+    ],
+    "noEngineReferences": false
+}

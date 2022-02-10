@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using Cinecast.CM.Hybrid;
-using Unity.Cinemachine.Hybrid;
 using UnityEngine;
 
 //Creating this to make the transition to dots cinemachine cameras easier!
@@ -69,12 +66,17 @@ public class CameraManager : MonoBehaviour
 
     bool EnableCinemachine(bool enable)
     {
-        if (CinemachineRoot.Instance != null)
+#if CINECAST_CINEMATOGRAPHER
+        if (Cinecast.CM.Hybrid.CinemachineRoot.Instance != null)
         {
-            CinemachineRoot.Instance.Enable(enable);
-            mainCamera.GetComponent<CmListener>().enabled = enable;
+            Cinecast.CM.Hybrid.CinemachineRoot.Instance.Enable(enable);
+            var listener = mainCamera.GetComponent<Unity.Cinemachine.Hybrid.CmListener>();
+            if (listener == null)
+                listener = mainCamera.gameObject.AddComponent<Unity.Cinemachine.Hybrid.CmListener>();
+            listener.enabled = enable;
             return enable;
         }
+#endif
         return false;
     }
 
