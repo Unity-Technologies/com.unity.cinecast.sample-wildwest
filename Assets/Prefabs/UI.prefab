@@ -6139,7 +6139,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Intervene
+  m_text: Speed Boost
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f2373103e9368433bb857e1ec381d8eb, type: 2}
   m_sharedMaterial: {fileID: -498874563910369816, guid: f2373103e9368433bb857e1ec381d8eb, type: 2}
@@ -8196,7 +8196,7 @@ GameObject:
   - component: {fileID: 2562678603505303525}
   - component: {fileID: 2562678603505303524}
   m_Layer: 5
-  m_Name: InterveneButton
+  m_Name: SpeedboostButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
