@@ -511,7 +511,6 @@ public class CinecastManager : MonoBehaviour
         }
 
         TotalFrames = playbackSessionInfo.TotalFrames;
-        Debug.Log($"End time = {playbackSessionInfo.EndTime} and endindex = {playbackSessionInfo.EndIndex} and total frames = {playbackSessionInfo.TotalFrames}");
         CurrentFrame = 1;
 
         mainThreadDispatcher.Dispatch(() =>
