@@ -586,8 +586,8 @@ public class UserInterface : MonoBehaviour
             float interest = Mathf.RoundToInt(CinecastManager.Instance.GetInterestPerPoi(entry.Value.Name));
             poiItemScript.interestValue.text = $"Interest: {interest}";
 
-            poiItemScript.button.onClick.RemoveAllListeners();
-            poiItemScript.button.onClick.AddListener(() =>
+            poiItemScript.spectatebutton.onClick.RemoveAllListeners();
+            poiItemScript.spectatebutton.onClick.AddListener(() =>
             {
                 CameraManager.Instance.ChangeCamera(entry.Value.Name);
             });

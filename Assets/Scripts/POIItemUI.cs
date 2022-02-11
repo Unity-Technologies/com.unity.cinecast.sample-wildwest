@@ -6,9 +6,10 @@ using UnityEngine.UI;
 
 public class POIItemUI : MonoBehaviour
 {
+    public TextMeshProUGUI itemType;
     public TextMeshProUGUI itemName;
     public TextMeshProUGUI interestValue;
-    public Button button;
+    public Button spectatebutton;
     public Image poiDeadImage;
     public Image interstFillImage;
 }
