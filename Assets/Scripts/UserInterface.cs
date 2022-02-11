@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using Cinecast.Api.Settings;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UserInterface : MonoBehaviour
@@ -94,11 +94,9 @@ public class UserInterface : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null){
+        if (Instance == null)
+        {
             Instance = this;
-            GameObject.DontDestroyOnLoad(this.gameObject);
-        } else {
-            Destroy(gameObject);
         }
     }
 
@@ -168,7 +166,7 @@ public class UserInterface : MonoBehaviour
                 break;
         }
 
-        if(notificationShow == true)
+        if(notificationShow)
         {
             if(Time.time > notificationTimer + itemDropNotificationTime)
             {
@@ -388,7 +386,7 @@ public class UserInterface : MonoBehaviour
     public void AddSessionButton(string sessionName, string sessionState, long sessionId, string sessionLength, bool isLocked)
     {
         GameObject sessionButton = Instantiate(sessionButtonPrefab);
-        sessionButton.transform.SetParent(sessionScrollRect);
+        sessionButton.transform.SetParent(sessionScrollRect,false);
 
         SessionButton sessionButtonScript = sessionButton.GetComponent<SessionButton>();
         sessionButtonScript.sessionName.text = sessionName;
@@ -663,7 +661,7 @@ public class UserInterface : MonoBehaviour
             spectatorItem.GetComponent<Button>().onClick.RemoveAllListeners();
             spectatorItem.GetComponent<Button>().onClick.AddListener(() =>
             {
-                Cinecast.Api.Settings.ISpectatorEventRef eventRef = new Cinecast.Api.Settings.SpectatorEventRef(item.ReferenceId);
+                ISpectatorEventRef eventRef = new SpectatorEventRef(item.ReferenceId);
                 CinecastManager.Instance.RequestSpectatorEvent(eventRef,Vector3.zero);
             });
         }
