@@ -138,7 +138,7 @@ public class UserInterface : MonoBehaviour
             break;
 
             case DemoState.Recording:
-                CameraManager.Instance.ChangeCamera("WorldView");
+                CameraManager.Instance.ChangeCamera("Seeker");
                 DemoManager.Instance.SetupRecording();
                 SetupRecordingUI();
             break;
@@ -465,10 +465,9 @@ public class UserInterface : MonoBehaviour
         });
 
         cameraViewDropdown.ClearOptions();
-
         List<TMP_Dropdown.OptionData> dropdownOptions = new List<TMP_Dropdown.OptionData>();
 
-        for(int i = 1; i < CameraManager.Instance.cameraPresets.Count; i++)
+        for(int i = 2; i < CameraManager.Instance.cameraPresets.Count; i++)
         {
             TMP_Dropdown.OptionData data = new TMP_Dropdown.OptionData(CameraManager.Instance.cameraPresets[i].name);
             dropdownOptions.Add(data);
@@ -477,7 +476,7 @@ public class UserInterface : MonoBehaviour
         cameraViewDropdown.AddOptions(dropdownOptions);
         cameraViewDropdown.onValueChanged.RemoveAllListeners();
         cameraViewDropdown.onValueChanged.AddListener(delegate {
-            CameraManager.Instance.ChangeCamera(CameraManager.Instance.cameraPresets[cameraViewDropdown.value + 1].name);
+            CameraManager.Instance.ChangeCamera(CameraManager.Instance.cameraPresets[cameraViewDropdown.value + 2].name);
         });
         cameraViewDropdown.value = 0;
 
