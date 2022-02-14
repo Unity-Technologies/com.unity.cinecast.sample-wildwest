@@ -129,10 +129,22 @@ public class CinecastManager : MonoBehaviour
         }).ConfigureAwait(false);
     }
 
+    public static void ListenForStartup(Action callback)
+    {
+        if (Instance != null && Instance.authorizationComplete)
+            callback?.Invoke();
+        else 
+            OnStartup += callback;
+    }
+        
+    private static Action OnStartup;
+
     private void OnStartupComplete(object sender, EventArgs args)
     {
         SDKRuntimeCinecast.Instance.OnStartupComplete -= OnStartupComplete;
         authorizationComplete = true;
+        if (OnStartup != null)
+            OnStartup();
 
         if(showCinecastLogs){
             Debug.Log("Cinecast Authorization Successful!");
@@ -423,6 +435,8 @@ public class CinecastManager : MonoBehaviour
             byte[] data = System.Text.Encoding.UTF8.GetBytes(json);
 
             (RecordingState recordingState, long lastFrame) = await recordingService.RecordAsync(data).ConfigureAwait(false);
+
+            RecordPOIs();
         }
     }
     
@@ -753,6 +767,7 @@ private void GetPOIStates()
 
             poiRecordingService.SetPosition(agentId, position);
             poiRecordingService.SetRotation(agentId, rotation);
+            poiRecordingService.SetRadius(agentId, 1);
         };
     }
 
@@ -833,6 +848,28 @@ private void OnWatcherCountsUpdated(object sender, IReadOnlyDictionary<string,lo
         IReadOnlyList<Cinecast.Api.Server.Extraction.SpectatorEvent> list = spectatorPlaybackService.GetTimeline();
         spectatorEventsTimeline = new List<Cinecast.Api.Server.Extraction.SpectatorEvent>();
         spectatorEventsTimeline.AddRange(list);
+    }
+
+    public void SetSelectedPOI(string poiId)
+    {
+        if (watcherService != null)
+        {
+            if (poiId.Length == 0)
+                watcherService.ClearPoiSelection();
+            else
+                watcherService.SelectPoi(poiId);
+        }
+    }
+
+    public void SetSelectedCamera(string cameraType)
+    {
+        if (watcherService != null)
+        {
+            if (cameraType.Length == 0)
+                watcherService.ClearCameraSelections();
+            else
+                watcherService.SelectCameras(new List<IPoiTypeCameraRef> { new PoiTypeCameraRef(cameraType) }, true);
+        }
     }
 
     private void OnSpectatorEventInventoryUpdated(object sender, IReadOnlyList<SpectatorEventInventory> inventory)
