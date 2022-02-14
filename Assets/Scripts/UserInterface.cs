@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Cinecast.Api.Settings;
 using TMPro;
 using UnityEngine;
@@ -86,6 +87,8 @@ public class UserInterface : MonoBehaviour
     public List<SampleTag> selectedTagsForSessionStart;
 
 #region Properties
+
+private List<RectTransform> poiItems = new List<RectTransform>();
     public static UserInterface Instance { get; private set; }
 
     #endregion
@@ -579,26 +582,28 @@ public class UserInterface : MonoBehaviour
         foreach(RectTransform child in poiPanel.GetComponentInChildren<RectTransform>())
         {
             Destroy(child.gameObject);
+            poiItems.Clear();
         }
         
         foreach(var entry in CinecastManager.Instance.CurrentPoiStates)
         {
             GameObject poiItem = Instantiate(poiItemPrefab);
+            poiItems.Add(poiItem.GetComponent<RectTransform>());
             poiItem.transform.SetParent(poiPanel.transform,false);
             POIItemUI poiItemScript = poiItem.GetComponent<POIItemUI>();
             poiItemScript.itemName.text = entry.Value.Name;
             poiItemScript.interstFillImage.fillAmount = 0;
+            poiItemScript.itemType.text = entry.Value.Groups[0];
+            if (entry.Value.Groups[0] == "Hunter")
+            {
+                poiItem.GetComponent<RectTransform>().SetAsFirstSibling();
+            }
 
             float interest = Mathf.RoundToInt(CinecastManager.Instance.GetInterestPerPoi(entry.Value.Name));
             poiItemScript.interestValue.text = $"Interest: {interest}";
-
-            //poiItemScript.spectatebutton.onClick.RemoveAllListeners();
-            //poiItemScript.spectatebutton.onClick.AddListener(() =>
-            //{
-            //    CameraManager.Instance.ChangeCamera(entry.Value.Name);
-            //});
         }
     }
+    
 
     public void SetupCameraPanel()
     {

@@ -717,13 +717,15 @@ private void GetPOIStates()
 
         //Register POIs
         IList<PoiDefinition> initialPois = new List<PoiDefinition>();
-
+        
         if (appSettings.Equals(Cinecast.Generated.AppSettings_Basic.AppSetting))
         {
+            
             string name = "Seeker";
             string id = DemoManager.Instance.seeker.AgentId;
             IPoiTypeRef poiType = Cinecast.Generated.AppSettings_Basic.PoiTypes.Player.PoiType;
             PoiDefinition newPoi = new PoiDefinition(name, id, poiType);
+            newPoi.Groups.Add("Hunter");
             initialPois.Add(newPoi);
 
 
@@ -734,6 +736,7 @@ private void GetPOIStates()
                 poiType = Cinecast.Generated.AppSettings_Basic.PoiTypes.Player.PoiType;
 
                 newPoi = new PoiDefinition(name, id, poiType);
+                newPoi.Groups.Add("Prey");
                 newPoi.Radius = 255f;
                 initialPois.Add(newPoi);
             }
