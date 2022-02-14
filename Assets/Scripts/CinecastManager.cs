@@ -720,17 +720,10 @@ private void GetPOIStates()
 
         if (appSettings.Equals(Cinecast.Generated.AppSettings_Basic.AppSetting))
         {
-            string name = "WorldView";
-            string id = name;
+            string name = "Seeker";
+            string id = DemoManager.Instance.seeker.AgentId;
             IPoiTypeRef poiType = Cinecast.Generated.AppSettings_Basic.PoiTypes.Player.PoiType;
-
-            PoiDefinition newPoi = new PoiDefinition(name,id,poiType);
-            initialPois.Add(newPoi);
-
-            name = "Seeker";
-            id = DemoManager.Instance.seeker.AgentId;
-            poiType = Cinecast.Generated.AppSettings_Basic.PoiTypes.Player.PoiType;
-            newPoi = new PoiDefinition(name, id, poiType);
+            PoiDefinition newPoi = new PoiDefinition(name, id, poiType);
             initialPois.Add(newPoi);
 
 
