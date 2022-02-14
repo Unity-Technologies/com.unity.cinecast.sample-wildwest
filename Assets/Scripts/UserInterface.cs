@@ -74,6 +74,10 @@ public class UserInterface : MonoBehaviour
     public GameObject spectatorEventPrefab;
     public GameObject specatorEventPanel;
 
+    [Header("Cameras")] 
+    public GameObject cameraPanel;
+    public TMP_Dropdown cameraDropdown;
+
     private bool notificationShow;
     private float notificationTimer;
 
@@ -147,6 +151,7 @@ public class UserInterface : MonoBehaviour
                 DemoManager.Instance.SetupPlayback();
                 SetupPlaybackUI();
                 SetupPOIPanel();
+                SetupCameraPanel();
                 SetupSpecatorEventsPanel();
             break;
         }
@@ -578,7 +583,8 @@ public class UserInterface : MonoBehaviour
         
         foreach(var entry in CinecastManager.Instance.CurrentPoiStates)
         {
-            GameObject poiItem = Instantiate(poiItemPrefab,poiPanel.transform);
+            GameObject poiItem = Instantiate(poiItemPrefab);
+            poiItem.transform.SetParent(poiPanel.transform,false);
             POIItemUI poiItemScript = poiItem.GetComponent<POIItemUI>();
             poiItemScript.itemName.text = entry.Value.Name;
             poiItemScript.interstFillImage.fillAmount = 0;
@@ -586,12 +592,32 @@ public class UserInterface : MonoBehaviour
             float interest = Mathf.RoundToInt(CinecastManager.Instance.GetInterestPerPoi(entry.Value.Name));
             poiItemScript.interestValue.text = $"Interest: {interest}";
 
-            poiItemScript.spectatebutton.onClick.RemoveAllListeners();
-            poiItemScript.spectatebutton.onClick.AddListener(() =>
-            {
-                CameraManager.Instance.ChangeCamera(entry.Value.Name);
-            });
+            //poiItemScript.spectatebutton.onClick.RemoveAllListeners();
+            //poiItemScript.spectatebutton.onClick.AddListener(() =>
+            //{
+            //    CameraManager.Instance.ChangeCamera(entry.Value.Name);
+            //});
         }
+    }
+
+    public void SetupCameraPanel()
+    {
+        List<TMP_Dropdown.OptionData> cameraOptions = new List<TMP_Dropdown.OptionData>();
+        for (int i = 1; i < CameraManager.Instance.cameraPresets.Count; i++)
+        {
+            TMP_Dropdown.OptionData newOption = new TMP_Dropdown.OptionData();
+            newOption.text = CameraManager.Instance.cameraPresets[i].name;
+            cameraOptions.Add(newOption);
+        }
+        
+        cameraDropdown.ClearOptions();
+        cameraDropdown.AddOptions(cameraOptions);
+        cameraDropdown.value = 1;
+        cameraDropdown.onValueChanged.RemoveAllListeners();
+        cameraDropdown.onValueChanged.AddListener(delegate
+        {
+            CameraManager.Instance.ChangeCamera(CameraManager.Instance.cameraPresets[cameraDropdown.value+1].name);
+        });
     }
 
     private void UpdatePOIButtons()
