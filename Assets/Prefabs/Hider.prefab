@@ -182,7 +182,7 @@ Transform:
   - {fileID: 6988339711233753306}
   - {fileID: 1218388138439502177}
   m_Father: {fileID: 8961688379691327483}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &6318241413060706683
 Animator:
@@ -959,6 +959,7 @@ Transform:
   m_LocalPosition: {x: 3.318, y: 0, z: -0.329}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 6176245177608128539}
   - {fileID: 4117667572880632833}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -1007,18 +1008,82 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c03fd28c84b1f4218925bfce6acf5589, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AgentType: 1
-  mainMenuTranform: {fileID: 7214106781856308283, guid: 5518a1b011438441c8e97f6890594bdd, type: 3}
+  agentType: 0
+  mainMenuTransform: {fileID: 0}
   sessionStartTransform: {fileID: 4263300676503234206, guid: 1da33e73010a448cb903c08c09413010, type: 3}
-  cameraTransform: {fileID: 0}
-  VisibilityDistance: 8
-  CatchRadius: 3
-  ObstacleLayerMask:
+  boostTrail: {fileID: 0}
+  visibilityDistance: 0
+  catchRadius: 0
+  obstacleLayerMask:
     serializedVersion: 2
-    m_Bits: 64
-  WalkSpeed: 3
-  RunSpeed: 5
-  TurnSpeed: 5
-  StoppingDistance: 2
-  WanderDurationMin: 5
-  WanderDurationMax: 10
+    m_Bits: 0
+  walkSpeed: 0
+  runSpeed: 0
+  turnSpeed: 0
+  stoppingDistance: 0
+  wanderDurationMin: 0
+  wanderDurationMax: 0
+  speedBoost: 0
+  speedBoostDuration: 0
+--- !u!1001 &6555706625404371609
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 8961688379691327483}
+    m_Modifications:
+    - target: {fileID: 1102504726662630017, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_Name
+      value: CM POI
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+--- !u!4 &6176245177608128539 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1102504726662630018, guid: b56fe434eaf93154e8e76c38d58d7a2f, type: 3}
+  m_PrefabInstance: {fileID: 6555706625404371609}
+  m_PrefabAsset: {fileID: 0}

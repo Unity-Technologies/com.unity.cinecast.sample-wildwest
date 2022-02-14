@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,6 +21,33 @@ public class CameraManager : MonoBehaviour
 
     public void ChangeCamera(string name)
     {
+        bool isPlayback = DemoManager.Instance.demoState == DemoState.Playback;
+        switch (name)
+        {
+            case "MainMenu": 
+                CinecastManager.Instance.SetSelectedCamera(string.Empty);
+                CinecastManager.Instance.SetSelectedPOI(string.Empty);
+                if (!EnableCinemachine(false))
+                    ReparentCamera(name);
+                break;
+            case "WorldView": 
+                CinecastManager.Instance.SetSelectedCamera("world");
+                //CinecastManager.Instance.SetSelectedCamera(string.Empty);
+                CinecastManager.Instance.SetSelectedPOI(string.Empty);
+                if (!EnableCinemachine(isPlayback))
+                    ReparentCamera(name);
+                break;
+            default:
+                CinecastManager.Instance.SetSelectedCamera("follow");
+                CinecastManager.Instance.SetSelectedPOI(name);
+                if (!EnableCinemachine(isPlayback))
+                    ReparentCamera(name);
+                break;
+        }
+    }
+
+    void ReparentCamera(string name)
+    {
         CameraPreset selectedPreset = cameraPresets.Find(x => x.name == name);
         if(selectedPreset == null)
         {
@@ -31,9 +57,27 @@ public class CameraManager : MonoBehaviour
 
         mainCamera.transform.SetParent(selectedPreset.cameraTransform);
         mainCamera.transform.localPosition = Vector3.zero;
-        mainCamera.transform.localRotation = new Quaternion(0,0,0,0);
+        mainCamera.transform.localRotation = Quaternion.identity;
     }
+
+    bool EnableCinemachine(bool enable)
+    {
+#if CINECAST_CINEMATOGRAPHER
+        if (Cinecast.CM.Hybrid.CinemachineRoot.Instance != null)
+        {
+            Cinecast.CM.Hybrid.CinemachineRoot.Instance.Enable(enable);
+            var listener = mainCamera.GetComponent<Unity.Cinemachine.Hybrid.CmListener>();
+            if (listener == null)
+                listener = mainCamera.gameObject.AddComponent<Unity.Cinemachine.Hybrid.CmListener>();
+            listener.enabled = enable;
+            return enable;
+        }
+#endif
+        return false;
+    }
+
 }
+
 
 [System.Serializable]
 public class CameraPreset
