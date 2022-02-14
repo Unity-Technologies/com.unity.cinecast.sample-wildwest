@@ -33,7 +33,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -153, y: 367.5401}
+  m_AnchoredPosition: {x: -153, y: 395.35184}
   m_SizeDelta: {x: 306.42, y: 735.08}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &105061171
@@ -1227,7 +1227,7 @@ GameObject:
   - component: {fileID: 1153664339}
   - component: {fileID: 1153664338}
   m_Layer: 5
-  m_Name: Scroll View
+  m_Name: POIView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1249,10 +1249,10 @@ RectTransform:
   m_Father: {fileID: 2562678602575370781}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -796.56, y: 0.0024414}
-  m_SizeDelta: {x: 326.84, y: 735.08}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 163.44, y: 0.007965088}
+  m_SizeDelta: {x: 326.84, y: -194.91}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1153664340
 CanvasRenderer:
@@ -1517,7 +1517,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 645995115}
   m_HandleRect: {fileID: 645995114}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
