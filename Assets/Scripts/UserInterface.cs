@@ -88,7 +88,7 @@ public class UserInterface : MonoBehaviour
 
 #region Properties
 
-private List<RectTransform> poiItems = new List<RectTransform>();
+private List<RectTransform> hiderPOIs = new List<RectTransform>();
     public static UserInterface Instance { get; private set; }
 
     #endregion
@@ -539,7 +539,7 @@ private List<RectTransform> poiItems = new List<RectTransform>();
             else
             {
                 CinecastManager.Instance.playbackState = PlaybackState.Paused;
-                DemoManager.Instance.StopAgents();
+                DemoManager.Instance.PauseAgents();
                 playPauseButton.GetComponent<Image>().sprite = playSprite;
             }
         });
@@ -582,13 +582,12 @@ private List<RectTransform> poiItems = new List<RectTransform>();
         foreach(RectTransform child in poiPanel.GetComponentInChildren<RectTransform>())
         {
             Destroy(child.gameObject);
-            poiItems.Clear();
+            hiderPOIs.Clear();
         }
         
         foreach(var entry in CinecastManager.Instance.CurrentPoiStates)
         {
             GameObject poiItem = Instantiate(poiItemPrefab);
-            poiItems.Add(poiItem.GetComponent<RectTransform>());
             poiItem.transform.SetParent(poiPanel.transform,false);
             POIItemUI poiItemScript = poiItem.GetComponent<POIItemUI>();
             poiItemScript.itemName.text = entry.Value.Name;
@@ -598,12 +597,37 @@ private List<RectTransform> poiItems = new List<RectTransform>();
             {
                 poiItem.GetComponent<RectTransform>().SetAsFirstSibling();
             }
+            else
+            {
+                hiderPOIs.Add(poiItem.GetComponent<RectTransform>());
+            }
 
             float interest = Mathf.RoundToInt(CinecastManager.Instance.GetInterestPerPoi(entry.Value.Name));
             poiItemScript.interestValue.text = $"Interest: {interest}";
+            poiItemScript.interest = interest;
         }
+
+        SortHiderPOIs();
     }
-    
+
+    private void SortHiderPOIs()
+    {
+        List<POIItemUI> uiItems = new List<POIItemUI>();
+        for (int i = 0; i < hiderPOIs.Count; i++)
+        {
+            uiItems.Add(hiderPOIs[i].GetComponent<POIItemUI>());
+        }
+        
+        uiItems.Sort((a,b)=>b.interest.CompareTo((a.interest)));
+      
+        for (int i = 0; i < hiderPOIs.Count; i++)
+        {
+            int index = uiItems.FindIndex(x => hiderPOIs[i]);
+            hiderPOIs[i].SetSiblingIndex(index + 1);
+            
+        }
+
+    }
 
     public void SetupCameraPanel()
     {
@@ -632,6 +656,7 @@ private List<RectTransform> poiItems = new List<RectTransform>();
            POIItemUI itemUI = child.GetComponent<POIItemUI>();
            float interest = Mathf.RoundToInt(CinecastManager.Instance.GetInterestPerPoi(itemUI.itemName.text));
            itemUI.interestValue.text = $"Interest: {interest}";
+           itemUI.interest = interest;
            var interestPercent = Mathf.InverseLerp(1f, 2000f, interest);
            itemUI.interstFillImage.fillAmount = interestPercent;
            itemUI.interstFillImage.color = poiGradient.Evaluate(interestPercent);
@@ -645,6 +670,8 @@ private List<RectTransform> poiItems = new List<RectTransform>();
                }
            }
        }
+       
+       SortHiderPOIs();
     }
 
     public void AnnounceItemDrop(string itemName)

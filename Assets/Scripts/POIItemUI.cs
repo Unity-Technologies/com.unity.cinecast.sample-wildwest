@@ -11,4 +11,5 @@ public class POIItemUI : MonoBehaviour
     public TextMeshProUGUI interestValue;
     public Image poiDeadImage;
     public Image interstFillImage;
+    public float interest;
 }

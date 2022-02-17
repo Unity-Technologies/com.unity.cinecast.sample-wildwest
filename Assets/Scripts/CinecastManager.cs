@@ -192,7 +192,8 @@ public class CinecastManager : MonoBehaviour
                     
                     foreach (var item in sessionSearchResponse.Data)
                     {
-                        TimeSpan sessionDuration = item.EndAt.Subtract(item.CreatedAt);
+                        
+                        TimeSpan sessionDuration = item.EndAt.Subtract(item.StartAt);
                         string sessionLength = (item.Status == SessionInfoSearchResponse_Status.Recording) ? "LIVE" : $"{sessionDuration.Minutes:00}:{sessionDuration.Seconds:00}";
                         UserInterface.Instance.AddSessionButton(item.Name, item.Status.ToString(), item.Id, sessionLength, item.IsLocked);
                     }
@@ -608,6 +609,10 @@ public class CinecastManager : MonoBehaviour
         mainThreadDispatcher.Dispatch(() =>
         {
             DemoManager.Instance.StopAgents();
+            CurrentFrame = 0;
+            CurrentFrameTime = 0;
+            TotalFrames = 0;
+            Spectators = 0;
         });
         
         cinecastState = CinecastState.Ready;

@@ -91,12 +91,23 @@ public class DemoManager : MonoBehaviour
         }
     }
 
+    public void PauseAgents()
+    {
+        for(int i = 0; i < AllAgents.Count; i++)
+        {
+            AllAgents[i].StopAgent();
+            AllAgents[i].ResetAnimator();
+        }
+    }
+
     public void StopAgents()
     {
         for(int i = 0; i < AllAgents.Count; i++)
         {
             AllAgents[i].StopAgent();
             AllAgents[i].ResetAnimator();
+            AllAgents[i].transform.position = AllAgents[i].sessionStartTransform.position;
+            AllAgents[i].transform.rotation = AllAgents[i].sessionStartTransform.rotation;
         }
     }
 
