@@ -182,6 +182,7 @@ public class Agent : MonoBehaviour
         if (Vector3.Distance(visibleOpponents.transform.position, transform.position) < catchRadius)
         {
             SetAnimationTrigger("Attack");
+            CinecastManager.Instance.StartAttackingPOI(AgentId);
             visibleOpponents.Catch();
             visibleOpponents = null;
             desiredDirection = Vector3.Cross(desiredDirection, Vector3.up) * Mathf.Sign(Random.value - 0.5f);

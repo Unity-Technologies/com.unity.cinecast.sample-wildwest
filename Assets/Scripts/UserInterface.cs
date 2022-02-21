@@ -658,7 +658,7 @@ private List<RectTransform> hiderPOIs = new List<RectTransform>();
            float interest = Mathf.RoundToInt(CinecastManager.Instance.GetInterestPerPoi(itemUI.itemName.text));
            itemUI.interestValue.text = $"Interest: {interest}";
            itemUI.interest = interest;
-           var interestPercent = Mathf.InverseLerp(0f, 100f, interest);
+           var interestPercent = Mathf.InverseLerp(0f, 150f, interest);
            itemUI.interstFillImage.fillAmount = interestPercent;
            itemUI.interstFillImage.color = poiGradient.Evaluate(interestPercent);
 

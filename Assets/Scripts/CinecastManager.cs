@@ -774,15 +774,19 @@ private void GetPOIStates()
     public void StartFleeingPOI(string agentId)
     {
         PoiEventRef poiEventRef = new PoiEventRef(@"flee");
-        bool result = poiRecordingService.StartEvent(agentId,poiEventRef);
-        if(result)
-        {
-        }
+        poiRecordingService.StartEvent(agentId, poiEventRef);
+
     }
 
     public void StartHuntingPOI(string agentId)
     {
         PoiEventRef poiEventRef = new PoiEventRef(@"hunt");
+        poiRecordingService.StartEvent(agentId,poiEventRef);
+    }
+
+    public void StartAttackingPOI(string agentId)
+    {
+        PoiEventRef poiEventRef = new PoiEventRef(@"attack");
         poiRecordingService.StartEvent(agentId,poiEventRef);
     }
 
