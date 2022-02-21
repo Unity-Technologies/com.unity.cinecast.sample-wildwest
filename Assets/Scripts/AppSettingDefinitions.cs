@@ -10,7 +10,7 @@
 
 /// <summary>
 /// Develop-time compiled Application Setting references
-/// Generated on 1/10/2022 6:01:08 PM
+/// Generated on 2/21/2022 12:36:59 PM
 /// </summary>
 namespace Cinecast.Generated {
    using Cinecast.Api.Settings;
@@ -28,6 +28,24 @@ namespace Cinecast.Generated {
       /// </summary>
       public sealed class PoiTypes {
          
+         public sealed class Hunter {
+            
+            /// <summary>
+            /// Accessor for the Hunter PoiType
+            /// </summary>
+            public static IPoiTypeRef PoiType = new PoiTypeRef(@"hunter");
+            
+            /// <summary>
+            /// Definition of each Camera in the PoiType
+            /// </summary>
+            public sealed class Cameras {
+               
+               public static IPoiTypeCameraRef World = new PoiTypeCameraRef(@"world");
+               
+               public static IPoiTypeCameraRef Follow = new PoiTypeCameraRef(@"follow");
+            }
+         }
+         
          public sealed class Player {
             
             /// <summary>
@@ -40,6 +58,8 @@ namespace Cinecast.Generated {
             /// </summary>
             public sealed class Cameras {
                
+               public static IPoiTypeCameraRef Follow = new PoiTypeCameraRef(@"follow");
+               
                public static IPoiTypeCameraRef World = new PoiTypeCameraRef(@"world");
             }
          }
@@ -49,6 +69,8 @@ namespace Cinecast.Generated {
       /// Definition of each interest event in the setting
       /// </summary>
       public sealed class InterestEvents {
+         
+         public static IPoiEventRef Attack = new PoiEventRef(@"attack");
          
          public static IPoiEventRef Hunt = new PoiEventRef(@"hunt");
          

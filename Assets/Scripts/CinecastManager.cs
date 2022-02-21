@@ -192,7 +192,6 @@ public class CinecastManager : MonoBehaviour
                     
                     foreach (var item in sessionSearchResponse.Data)
                     {
-                        
                         TimeSpan sessionDuration = item.EndAt.Subtract(item.StartAt);
                         string sessionLength = (item.Status == SessionInfoSearchResponse_Status.Recording) ? "LIVE" : $"{sessionDuration.Minutes:00}:{sessionDuration.Seconds:00}";
                         UserInterface.Instance.AddSessionButton(item.Name, item.Status.ToString(), item.Id, sessionLength, item.IsLocked);
@@ -201,7 +200,7 @@ public class CinecastManager : MonoBehaviour
             });
         }
     }
-    
+
     public async void GetSessionsByName(string searchInput)
     {
         if (sessionManagementService == null)
