@@ -152,7 +152,7 @@ private List<RectTransform> hiderPOIs = new List<RectTransform>();
 
             case DemoState.Playback:
                 DemoManager.Instance.SetupPlayback();
-                CameraManager.Instance.ChangeCamera("Seeker");
+                CameraManager.Instance.ChangeCamera("WorldView");
                 SetupPlaybackUI();
                 SetupPOIPanel();
                 SetupCameraPanel();
@@ -642,7 +642,7 @@ private List<RectTransform> hiderPOIs = new List<RectTransform>();
         
         cameraDropdown.ClearOptions();
         cameraDropdown.AddOptions(cameraOptions);
-        cameraDropdown.value = 1;
+        cameraDropdown.value = 0;
         cameraDropdown.onValueChanged.RemoveAllListeners();
         cameraDropdown.onValueChanged.AddListener(delegate
         {
