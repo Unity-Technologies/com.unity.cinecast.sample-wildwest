@@ -1,12 +1,15 @@
 Cinecast Cinematographer is an experimental suite of packages built using DOTS technology.
+
 DOTS is used so that many hundreds of smart shot-evaluating cameras can coexist with minimal performance impact.
-Shipped with this sample is a snapshot of still-unreleased versions of DOTS 0.50, including
+Shipped with this sample is a snapshot of still-unreleased versions of DOTS 0.50, including:
+
 	- com.unity.entities
 	- com.unity.jobs
 	- com.unity.mathematics
 	- com.unity.platforms*
 
 Also shipped is a pre-release version of Cinemachine.DOTS and cinecast.cinematographer, including:
+
 	- com.unity.stableid
 	- com.unity.cinemachine.dots
 	- com.unity.cinecast.cinematographer
@@ -24,8 +27,8 @@ To install Cinecast Cinematographer into the Wild West Demo:
 Prerequisite: a DOTS-stream version of Unity (currently 2020.3.14f1-dots, available here: unityhub://2020.3.14f1-dots/051fb20b3877)
 
 1. Unzip DOTS-0.50-prerelease.zip and CinematographerPackages.zip into the Packages folder.  
-2. Import AssetsWithCinematographer.unitypackage to the project.  It will overwrite the Assets/CinemachineHelpers folder, installing some prefabs and scripts.
-3. Reopen the project.
+2. Reopen the project.
+3. Import AssetsWithCinematographer.unitypackage to the project.  It will overwrite the Assets/CinemachineHelpers folder, installing some prefabs and scripts.
 
 
 To remove Cinecast Cinematographer from the Wild West Demo:
