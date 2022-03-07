@@ -6268,8 +6268,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IgnoreAuthorization: 0
   showCinecastLogs: 1
-  publicKey: pk_FpAeXy1sDkfNz22vWdBM
-  secretKey: sk_Ijj02y1ZkOsa3MXyuf4q
+  publicKey: 
+  secretKey: 
   cinecastConfig: {fileID: 11400000, guid: 4c260f0bbc8164713901eaed066e87fc, type: 2}
   AllowedSessionSearchTags:
   - Category: Player

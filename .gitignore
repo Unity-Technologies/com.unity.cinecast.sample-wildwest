@@ -1,11 +1,3 @@
-Packages/com.unity.cinecast.cinematographer*
-Packages/com.unity.cinemachine*
-Packages/com.unity.entities*
-Packages/com.unity.jobs*
-Packages/com.unity.mathematics*
-Packages/com.unity.platforms*
-Packages/com.unity.stableid*
-
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -17,6 +9,7 @@ Packages/com.unity.stableid*
 .vscode/
 .vsconfig
 .vs/
+.idea/
 
 *.csproj
 *.sln
@@ -24,7 +17,6 @@ Packages/com.unity.stableid*
 *.tmp
 *.userprefs
 *.app
-.idea/
 *.VC.*
 .DS_Store
 *.swp
