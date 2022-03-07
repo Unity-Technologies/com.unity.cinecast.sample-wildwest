@@ -41,14 +41,5 @@
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0"
-  },
-  "scopedRegistries": [
-    {
-      "name": "Unity Artifactory Candidates",
-      "url": "https://artifactory.prd.cds.internal.unity3d.com/artifactory/api/npm/upm-candidates",
-      "scopes": [
-        "com.unity.cinecast"
-      ]
-    }
-  ]
+  }
 }
