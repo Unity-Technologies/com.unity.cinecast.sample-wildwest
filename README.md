@@ -4,7 +4,7 @@
 
 **This project requires access to Cinecast beta. Go to [Cinecast product page](https://unity.com/pages/cinecast) for more information.**
 
-This sample showcases all the basic functionalities of Cinecast, it acts as a suggestion of how Cinecast SDK could be implemented into a game.
+This sample showcases all the basic functionalities of Cinecast. It acts as a suggestion of how Cinecast SDK could be implemented into a game.
 
 Features:
 
@@ -33,12 +33,12 @@ Features:
   - `ServerRefAssignment_Api`
   - `PlaybackConfig`
   - `RecordingConfig`
-  - `CinecastConfig`, and add reference to `RecordingConfig`, `PlaybackConfig` and `CoreConfig`
+  - `CinecastConfig`, and add references to `RecordingConfig`, `PlaybackConfig` and `CoreConfig`
 - Create *Cinecast SDK Core Config* assets (`Assets > Create > Cinecast > Core > Config`):
   - `CoreNetworkConfig`  
-  - `ServerRefAssignments`, and add reference to `ServerRegAssignment_Ingestion`, `ServerRefAssignments_Extraction` and `ServerRefAssignments_Api`
-  - `CoreConfig`, and add reference to `CoreNetworkConfig` and `ServerRevAssignments`
-- Inspect the object `CinecastManager` from the scene `Demo`, and in `Cinecast Config` add reference to `CinecastConfig`
+  - `ServerRefAssignments`, and add references to `ServerRegAssignment_Ingestion`, `ServerRefAssignments_Extraction` and `ServerRefAssignments_Api`
+  - `CoreConfig`, and add references to `CoreNetworkConfig` and `ServerRevAssignments`
+- Inspect the object `CinecastManager` from the scene `Demo`, and in `Cinecast Config` add a reference to `CinecastConfig`
 
 **3. Set Cinecast Authorization Keys**
 
