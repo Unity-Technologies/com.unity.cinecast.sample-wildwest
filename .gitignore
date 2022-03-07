@@ -1,7 +1,3 @@
-/Packages/**
-/Packages/packages-lock.json
-!/Packages/manifest.json
-
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
@@ -13,6 +9,7 @@
 .vscode/
 .vsconfig
 .vs/
+.idea/
 
 *.csproj
 *.sln
@@ -20,7 +17,6 @@
 *.tmp
 *.userprefs
 *.app
-.idea/
 *.VC.*
 .DS_Store
 *.swp
