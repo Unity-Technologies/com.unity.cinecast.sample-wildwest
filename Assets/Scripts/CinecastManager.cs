@@ -18,7 +18,7 @@ using Cinecast.Core.Api.Networking;
 
 public class CinecastManager : MonoBehaviour
 {
-    [Header("Debugging:")]
+    [Header("Debugging")]
     [SerializeField] public bool IgnoreAuthorization;
     [SerializeField] private bool showCinecastLogs;
 
@@ -26,10 +26,10 @@ public class CinecastManager : MonoBehaviour
     [SerializeField] private string publicKey;
     [SerializeField] private string secretKey;
 
-    [Header("Config:")]
+    [Header("Config")]
     [SerializeField] private CinecastConfig cinecastConfig;
     
-    [Header("SessionSearchTags:")] 
+    [Header("SessionSearchTags")] 
     public List<SampleTag> AllowedSessionSearchTags = new List<SampleTag>();
 
     private bool authorizationComplete;
