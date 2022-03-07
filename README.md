@@ -2,7 +2,17 @@
 
 *Tested with Unity 2020.3.30f1*
 
+**This project requires access to Cinecast beta. Go to [Cinecast product page](https://unity.com/pages/cinecast) for more information.**
+
 This sample showcases all the basic functionalities of Cinecast, it acts as a suggestion of how Cinecast SDK could be implemented into a game.
+
+Features:
+
+- Session management
+- Recording
+- Playback
+- Interest events
+- Spectator events
 
 ------
 
