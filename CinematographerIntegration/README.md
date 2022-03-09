@@ -16,7 +16,7 @@ To install *Cinecast Cinematographer* into the WildWest sample:
     {
       "dependencies": {
         "com.unity.cinecast": "0.10.0-preview",
-    +  "com.unity.cinecast.cinematographer": "0.1.0-preview.1",
+    +   "com.unity.cinecast.cinematographer": "0.1.0-preview.2",
         ...
       }
     }
