@@ -10,7 +10,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.cinecast": {
-      "version": "0.10.0-preview.1",
+      "version": "0.10.0-preview.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
